@@ -16,5 +16,5 @@ app.register_blueprint(quiz_bp)
 app.register_blueprint(auth_bp, url_prefix='/auth')
 
 # Only use this for local development
-if __name__ == '__main__' and not os.getenv('VERCEL_ENV'):
+if __name__ == '__main__':
     app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG)
