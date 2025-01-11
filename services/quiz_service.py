@@ -1,5 +1,7 @@
 import json
 from services.ai_service import AIService
+from services.database_service import DatabaseService
+from sqlalchemy.orm import Session
 
 class QuizService:
     def __init__(self):
@@ -40,7 +42,7 @@ class QuizService:
             text = text[:-3]
         return text.strip()
     
-    def generate_quiz(self, topic, num_questions, question_types):
+    def generate_quiz(self, topic, num_questions, question_types, db: Session):
         try:
             # Remove max limit check, keep minimum of 1
             num_questions = max(int(num_questions), 1)
@@ -66,6 +68,9 @@ class QuizService:
                     quiz_data = {'questions': quiz_data}
                 else:
                     raise ValueError("Invalid quiz data format")
+            
+            # Store questions in database
+            DatabaseService.store_questions(db, quiz_data['questions'], topic)
             
             return quiz_data['questions']
         except Exception as e:
