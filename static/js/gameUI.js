@@ -237,11 +237,14 @@ const GameUI = {
         $('.answer-btn').prop('disabled', true);
         
         if (timeOut) {          
-            // Show "Time's up!" message immediately
+            // Show "Time's up!" message with improved styling
             $('#questionText').append(
                 $('<div>')
-                    .addClass('text-danger mt-3')
-                    .text("Time's up!")
+                    .addClass('times-up-message mt-4 text-center')
+                    .html(`
+                        <i class="fas fa-clock text-danger mb-2" style="font-size: 2rem;"></i>
+                        <div class="h3 text-danger fw-bold mb-0">Time's up!</div>
+                    `)
             );
 
             // Then start the answer feedback sequence
