@@ -1,5 +1,6 @@
 <div class="card mb-4">
     <div class="card-body">
+        {% if is_admin %}
         <form id="quizForm">
             <div class="mb-3">
                 <label for="topic" class="form-label">Quiz Topic</label>
@@ -24,5 +25,10 @@
                 <button type="button" id="randomQuiz" class="btn btn-secondary">Try Random Questions</button>
             </div>
         </form>
+        {% else %}
+        <div class="text-center">
+            <button type="button" id="randomQuiz" class="btn btn-primary btn-lg">Try Random Questions</button>
+        </div>
+        {% endif %}
     </div>
 </div>
