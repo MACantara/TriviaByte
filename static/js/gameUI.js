@@ -150,6 +150,9 @@ const GameUI = {
         $('.answer-btn').prop('disabled', true);
         
         if (timeOut) {
+            // Play error sound immediately when time runs out
+            this.playSound('error');
+            
             // Show "Time's up!" message immediately
             $('#questionText').append(
                 $('<div>')
