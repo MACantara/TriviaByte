@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, current_app
 from services.quiz_service import QuizService
 from services.ai_service import AIService
+from services.database_service import DatabaseService
 from config.database import db
 import logging
 
@@ -39,4 +40,30 @@ def generate():
         return jsonify({
             'error': "Failed to generate quiz",
             'status': 'error'
+        }), 500
+
+@quiz_bp.route('/save-question', methods=['POST'])
+def save_question():
+    try:
+        question_data = request.get_json()
+        
+        # Save single question
+        saved_question = DatabaseService.store_single_question(
+            question=question_data['question'],
+            options=question_data['options'],
+            correct_answer=question_data['correct_answer'],
+            topic=question_data.get('topic', 'General')
+        )
+
+        return jsonify({
+            'status': 'success',
+            'message': 'Question saved successfully',
+            'question_id': saved_question.id
+        })
+
+    except Exception as e:
+        current_app.logger.error(f"Question save error: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': "Failed to save question"
         }), 500
