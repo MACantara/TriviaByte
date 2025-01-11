@@ -38,10 +38,24 @@
 
 .answer-btn.correct-answer {
     animation: correct-answer 0.5s;
+    -webkit-animation: correct-answer 0.5s;
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
 }
 
 .answer-btn.wrong-answer {
     animation: wrong-answer 0.5s;
+    -webkit-animation: wrong-answer 0.5s;
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
 }
 
 /* Add styles for the game header */
@@ -95,16 +109,38 @@
 }
 
 @keyframes correct-answer {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
-    100% { transform: scale(1); }
+    0% { 
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+    50% { 
+        transform: scale(1.1);
+        -webkit-transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(40, 167, 69, 0.5);
+    }
+    100% { 
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
 }
 
 @keyframes wrong-answer {
-    0% { transform: scale(1); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-    100% { transform: scale(1); }
+    0% { 
+        transform: scale(1) translateX(0);
+        -webkit-transform: scale(1) translateX(0);
+    }
+    25% { 
+        transform: scale(1) translateX(-10px);
+        -webkit-transform: scale(1) translateX(-10px);
+    }
+    75% { 
+        transform: scale(1) translateX(10px);
+        -webkit-transform: scale(1) translateX(10px);
+    }
+    100% { 
+        transform: scale(1) translateX(0);
+        -webkit-transform: scale(1) translateX(0);
+    }
 }
 
 @keyframes pulse-green {
@@ -267,4 +303,14 @@
 
 #muteButton:active {
     transform: scale(0.95);
+}
+
+/* Ensure animations work properly on mobile */
+@media (max-width: 991px) {
+    .answer-btn.correct-answer,
+    .answer-btn.wrong-answer {
+        will-change: transform;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+    }
 }
