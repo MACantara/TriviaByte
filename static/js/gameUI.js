@@ -112,10 +112,10 @@ const GameUI = {
         // Shuffle and display options with animations
         this.shuffleArray(question.options).forEach((option, index) => {
             const button = $('<div>')
-                .addClass('col-md-6')
+                .addClass('col-12 col-sm-6 answer-container')
                 .append(
                     $('<button>')
-                        .addClass('btn btn-lg w-100 h-100 py-4 answer-btn')
+                        .addClass('btn btn-lg w-100 answer-btn')
                         .css('background-color', this.colors[index])
                         .css('transform', 'scale(0)')
                         .text(option)

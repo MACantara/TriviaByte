@@ -178,3 +178,63 @@
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
+
+/* Answer Grid Responsive Styling */
+.answer-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.answer-container {
+    height: 100%;
+    min-height: 80px;
+}
+
+.answer-btn {
+    min-height: 80px;
+    font-size: calc(1rem + 0.2vw) !important;
+    padding: 1rem !important;
+}
+
+/* Tablet (md) */
+@media (min-width: 768px) {
+    .answer-container {
+        min-height: 100px;
+    }
+    
+    .answer-btn {
+        min-height: 100px;
+        font-size: calc(1.1rem + 0.3vw) !important;
+    }
+}
+
+/* Desktop (lg) */
+@media (min-width: 992px) {
+    .answer-container {
+        min-height: 120px;
+    }
+    
+    .answer-btn {
+        min-height: 120px;
+        font-size: calc(1.2rem + 0.4vw) !important;
+    }
+}
+
+/* Large Desktop (xl) */
+@media (min-width: 1200px) {
+    .answer-grid {
+        padding: 0 2rem;
+    }
+    
+    .answer-btn {
+        padding: 1.5rem !important;
+    }
+}
+
+/* Hover effects only on devices that support hover */
+@media (hover: hover) {
+    .answer-btn:hover {
+        transform: scale(1.03) !important;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+}
