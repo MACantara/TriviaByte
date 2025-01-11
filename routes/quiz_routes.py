@@ -10,11 +10,7 @@ ai_service = AIService()
 @quiz_bp.route('/')
 def index():
     question_types = [
-        {'id': 'multipleChoice', 'value': 'multiple_choice', 'label': 'Multiple Choice'},
-        {'id': 'dragDrop', 'value': 'drag_drop', 'label': 'Drag and Drop'},
-        {'id': 'fillBlank', 'value': 'fill_blank', 'label': 'Fill in the Blank'},
-        {'id': 'trueFalse', 'value': 'true_false', 'label': 'True/False'},
-        {'id': 'coding', 'value': 'coding', 'label': 'Coding'}
+        {'id': 'multipleChoice', 'value': 'multiple_choice', 'label': 'Multiple Choice'}
     ]
     return render_template('index.html', question_types=question_types)
 
