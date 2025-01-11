@@ -25,7 +25,6 @@ def generate():
         question_types = data.get('question_types', ['multiple_choice'])
         
         quiz = quiz_service.generate_quiz(
-            topic=topic,
             num_questions=num_questions,
             question_types=question_types
         )
@@ -52,7 +51,6 @@ def save_question():
             question=question_data['question'],
             options=question_data['options'],
             correct_answer=question_data['correct_answer'],
-            topic=question_data.get('topic', 'General')
         )
 
         return jsonify({

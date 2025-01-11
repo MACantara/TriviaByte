@@ -9,4 +9,3 @@ class Question(db.Model):
     options = db.Column(db.ARRAY(db.String), nullable=False)
     correct_answer = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    topic = db.Column(db.String, nullable=False)
