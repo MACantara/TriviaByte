@@ -19,7 +19,7 @@ def admin_required(f):
             return redirect(url_for('auth.login'))
         user = User.query.get(session['user_id'])
         if not user or not user.is_admin:
-            return redirect(url_for('index'))
+            return redirect(url_for('quiz.index'))  # Updated to use quiz.index
         return f(*args, **kwargs)
     return decorated_function
 
@@ -33,7 +33,7 @@ def login():
         if user and user.check_password(password):
             session['user_id'] = user.id
             session['is_admin'] = user.is_admin
-            return redirect(url_for('index'))
+            return redirect(url_for('quiz.index'))  # Updated to use quiz.index
         
         flash('Invalid username or password')
     return render_template('auth/login.html')
@@ -41,4 +41,4 @@ def login():
 @auth_bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('quiz.index'))  # Updated to use quiz.index
