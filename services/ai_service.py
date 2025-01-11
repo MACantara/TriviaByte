@@ -1,7 +1,7 @@
 import json
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
-from config import Config
+from config.settings import Config  # Update import path
 import logging
 
 logger = logging.getLogger(__name__)
