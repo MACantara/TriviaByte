@@ -17,13 +17,49 @@ const GameUI = {
     bgmTargetVolume: 0.3,
     bgmFadeInterval: null,
 
+    // Add mute state
+    isMuted: false,
+
     // Initialize BGM settings
     initBgm: function() {
         this.bgm.loop = true;
         this.bgm.volume = 0;  // Start at 0 volume
+
+        // Initialize mute button state
+        const $muteBtn = $('#muteButton i');
+        if (this.isMuted) {
+            $muteBtn.removeClass('fa-volume-up').addClass('fa-volume-mute');
+        } else {
+            $muteBtn.removeClass('fa-volume-mute').addClass('fa-volume-up');
+        }
+
+        // Setup mute button handler with proper binding
+        $('#muteButton').off('click').on('click', () => {
+            this.toggleMute();
+        });
+    },
+
+    toggleMute: function() {
+        this.isMuted = !this.isMuted;
+        const $muteBtn = $('#muteButton i');
+        
+        if (this.isMuted) {
+            this.bgm.volume = 0;
+            $muteBtn.removeClass('fa-volume-up').addClass('fa-volume-mute');
+        } else {
+            if (this.bgm.paused && this.currentQuestion < this.questions?.length) {
+                this.bgm.play();
+            }
+            this.bgm.volume = this.bgmTargetVolume;
+            $muteBtn.removeClass('fa-volume-mute').addClass('fa-volume-up');
+        }
+
+        // Store mute preference (optional)
+        localStorage.setItem('gameIsMuted', this.isMuted);
     },
 
     fadeInBgm: function() {
+        if (this.isMuted) return;
         clearInterval(this.bgmFadeInterval);
         this.bgm.volume = 0;
         this.bgm.play().catch(() => console.log('BGM autoplay prevented'));
@@ -142,7 +178,9 @@ const GameUI = {
         
         // Reset BGM volume
         clearInterval(this.bgmFadeInterval);
-        this.bgm.volume = this.bgmTargetVolume;
+        if (!this.isMuted) {
+            this.bgm.volume = this.bgmTargetVolume;
+        }
         
         // Reset progress bar state
         const $progressBar = $('#timerProgress');
@@ -327,18 +365,19 @@ const GameUI = {
                 this.bgm.volume = 0.3; // Reset volume for next game
                 clearInterval(fadeOut);
                 
-                // Play results sound after BGM has faded
-                const soundFile = (this.correctAnswers >= 3 && this.correctAnswers <= 5) 
-                    ? 'you-won-a-prize.mp3' 
-                    : 'you-won-nothing.mp3';
-                
-                console.log('Playing end game sound:', soundFile); // Debug log
-                
-                const resultsSound = new Audio(`/static/sounds/${soundFile}`);
-                resultsSound.volume = 1.0; // Ensure full volume
-                resultsSound.play().catch(err => {
-                    console.error('Error playing sound:', err);
-                });
+                if (!this.isMuted) {
+                    const soundFile = (this.correctAnswers >= 3 && this.correctAnswers <= 5) 
+                        ? 'you-won-a-prize.mp3' 
+                        : 'you-won-nothing.mp3';
+                    
+                    console.log('Playing end game sound:', soundFile); // Debug log
+                    
+                    const resultsSound = new Audio(`/static/sounds/${soundFile}`);
+                    resultsSound.volume = 1.0; // Ensure full volume
+                    resultsSound.play().catch(err => {
+                        console.error('Error playing sound:', err);
+                    });
+                }
             }
         }, 100);
 
@@ -351,6 +390,8 @@ const GameUI = {
     },
 
     playSound: function(type) {
+        if (this.isMuted) return;
+        
         const soundMap = {
             'success': 'success.mp3',
             'error': 'error.mp3',
@@ -372,5 +413,7 @@ const GameUI = {
 
 // Initialize GameUI when document is ready
 $(document).ready(() => {
+    // Load saved mute preference (optional)
+    GameUI.isMuted = localStorage.getItem('gameIsMuted') === 'true';
     GameUI.initBgm();
 });
