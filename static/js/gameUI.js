@@ -13,19 +13,37 @@ const GameUI = {
     // Add new properties for audio
     bgm: new Audio('/static/sounds/bgm.mp3'),
     
+    // Add fade properties
+    bgmTargetVolume: 0.3,
+    bgmFadeInterval: null,
+
     // Initialize BGM settings
     initBgm: function() {
         this.bgm.loop = true;
-        this.bgm.volume = 0.3;
+        this.bgm.volume = 0;  // Start at 0 volume
+    },
+
+    fadeInBgm: function() {
+        clearInterval(this.bgmFadeInterval);
+        this.bgm.volume = 0;
+        this.bgm.play().catch(() => console.log('BGM autoplay prevented'));
+        
+        this.bgmFadeInterval = setInterval(() => {
+            if (this.bgm.volume < this.bgmTargetVolume) {
+                this.bgm.volume = Math.min(this.bgmTargetVolume, this.bgm.volume + 0.02);
+            } else {
+                clearInterval(this.bgmFadeInterval);
+            }
+        }, 100);
     },
 
     startGame: function(questions) {
         this.resetGame();
         this.questions = questions;
         
-        // Start background music
+        // Start background music with fade in
         this.initBgm();
-        this.bgm.play().catch(() => console.log('BGM autoplay prevented'));
+        this.fadeInBgm();
         
         // Update total questions display
         $('#totalQuestions').text(this.questions.length);
@@ -123,7 +141,8 @@ const GameUI = {
         $('#timer, #timerProgress').removeClass('countdown-warning');
         
         // Reset BGM volume
-        this.bgm.volume = 0.3;
+        clearInterval(this.bgmFadeInterval);
+        this.bgm.volume = this.bgmTargetVolume;
         
         // Reset progress bar state
         const $progressBar = $('#timerProgress');
