@@ -54,9 +54,8 @@ const QuizLogic = {
             try {
                 const response = await QuizAPI.getRandomQuestions();
                 if (response.status === 'success' && response.questions.length > 0) {
-                    this.currentQuiz = { questions: response.questions };
-                    QuizUI.displayQuiz(this.currentQuiz);
-                    $('#quizContainer').removeClass('d-none');
+                    // Use GameUI instead of regular quiz display
+                    GameUI.startGame(response.questions);
                 } else {
                     alert('No questions available. Try generating new ones!');
                 }
