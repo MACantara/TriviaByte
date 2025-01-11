@@ -138,11 +138,15 @@ const QuizUI = {
         // Add restart button
         questionsContainer.append(
             $('<button>')
-                .addClass('btn btn-primary w-100 mt-3')
-                .text('Start New Quiz')
+                .addClass('btn btn-primary btn-lg w-100 mt-4 shadow-sm')
+                .html('<i class="fas fa-redo me-2"></i>Start New Quiz')
                 .on('click', () => {
-                    $('#quizForm').trigger('reset');
-                    $('#quizContainer').addClass('d-none');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(() => {
+                        $('#quizForm').trigger('reset');
+                        $('#quizContainer').addClass('d-none');
+                        $('.card.mb-4').removeClass('d-none');
+                    }, 300);
                 })
         );
     },
