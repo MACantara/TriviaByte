@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, request, jsonify, current_app
-import time
 from services.quiz_service import QuizService
 from services.ai_service import AIService
-from config.database import get_db
-from fastapi import Depends
-from sqlalchemy.orm import Session
+from config.database import db
+import logging
 
 quiz_bp = Blueprint('quiz', __name__)
 quiz_service = QuizService()
@@ -22,17 +20,13 @@ def generate():
     try:
         data = request.get_json()
         topic = data.get('topic')
-        num_questions = max(int(data.get('num_questions', 5)), 1)  # Remove upper limit, keep minimum of 1
+        num_questions = max(int(data.get('num_questions', 5)), 1)
         question_types = data.get('question_types', ['multiple_choice'])
-
-        # Get database session
-        db = next(get_db())
         
         quiz = quiz_service.generate_quiz(
             topic=topic,
             num_questions=num_questions,
-            question_types=question_types,
-            db=db
+            question_types=question_types
         )
 
         return jsonify({
