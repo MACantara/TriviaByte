@@ -3,7 +3,7 @@ from config.settings import Config
 from config.database import init_db
 from routes.quiz_routes import quiz_bp
 from routes.auth_routes import auth_bp
-from routes.analytics import analytics
+from routes.analytics import analytics_bp  # Updated import name
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ init_db(app)
 # Register blueprints
 app.register_blueprint(quiz_bp)
 app.register_blueprint(auth_bp, url_prefix='/auth')
-app.register_blueprint(analytics, url_prefix='/analytics')
+app.register_blueprint(analytics_bp, url_prefix='/analytics')  # Updated blueprint name
 
 # Error handlers
 @app.errorhandler(404)
