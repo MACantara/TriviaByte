@@ -1,0 +1,44 @@
+<div id="gameContainer" class="d-none">
+    <!-- Progress bar -->
+    <div class="progress mb-4">
+        <div id="questionProgress" class="progress-bar" role="progressbar" style="width: 0%"></div>
+    </div>
+
+    <!-- Timer -->
+    <div class="text-center mb-4">
+        <div id="timer" class="display-1 fw-bold text-primary">20</div>
+    </div>
+
+    <!-- Question Display -->
+    <div id="questionDisplay">
+        <h2 id="questionText" class="text-center mb-4 display-6"></h2>
+        
+        <!-- Answer Grid -->
+        <div class="row g-4" id="answerGrid">
+            <!-- Options will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Score Display -->
+    <div id="scoreDisplay" class="text-center mt-4 d-none">
+        <h3 class="display-4 mb-3">Score: <span id="currentScore">0</span></h3>
+        <div id="streakCounter" class="mb-3">
+            <span class="badge bg-warning">Streak: <span id="currentStreak">0</span>🔥</span>
+        </div>
+    </div>
+
+    <!-- Final Results -->
+    <div id="finalResults" class="text-center mt-4 d-none">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Game Over!</h2>
+                <p class="display-4 text-primary mb-4">Final Score: <span id="finalScore">0</span></p>
+                <div class="stats mb-4">
+                    <p>Correct Answers: <span id="correctAnswers">0</span></p>
+                    <p>Best Streak: <span id="bestStreak">0</span>🔥</p>
+                </div>
+                <button id="playAgain" class="btn btn-lg btn-primary">Play Again</button>
+            </div>
+        </div>
+    </div>
+</div>
