@@ -136,30 +136,33 @@ const GameUI = {
         $('.answer-btn').prop('disabled', true);
         
         if (timeOut) {
-            // If time ran out, gray out all answers first
-            $('.answer-btn').each(function() {
-                $(this).animate({
-                    backgroundColor: 'rgba(128, 128, 128, 0.8)'
-                }, 300);
-            });
-            
-            // Then highlight correct answer with the same timing as normal feedback
+            // Show "Time's up!" message immediately
+            $('#questionText').append(
+                $('<div>')
+                    .addClass('text-danger mt-3')
+                    .text("Time's up!")
+            );
+
+            // Then start the answer feedback sequence
             setTimeout(() => {
+                // Gray out all answers first
                 $('.answer-btn').each(function() {
-                    if ($(this).text() === correctAnswer) {
-                        $(this).animate({
-                            backgroundColor: 'rgba(40, 167, 69, 1)'  // Solid green
-                        }, 500).addClass('correct-answer');
-                    }
+                    $(this).animate({
+                        backgroundColor: 'rgba(128, 128, 128, 0.8)'
+                    }, 300);
                 });
-                
-                // Show "Time's up!" message
-                $('#questionText').append(
-                    $('<div>')
-                        .addClass('text-danger mt-3')
-                        .text("Time's up!")
-                );
-            }, 600);  // Same delay as normal feedback
+
+                // Show correct answer after graying out
+                setTimeout(() => {
+                    $('.answer-btn').each(function() {
+                        if ($(this).text() === correctAnswer) {
+                            $(this).animate({
+                                backgroundColor: 'rgba(40, 167, 69, 1)'
+                            }, 500).addClass('correct-answer');
+                        }
+                    });
+                }, 600);
+            }, 300);  // Short delay after "Time's up!" message
         } else {
             // Gray out non-selected answers with proper opacity
             $('.answer-btn').not('.selected').each(function() {
