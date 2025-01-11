@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class AIService:
     def __init__(self):
         logger.info("Initializing AIService")
-        self.client = genai.Client(api_key=Config.PRIMARY_GEMINI_API_KEY)
+        self.client = genai.Client(api_key=Config.GEMINI_API_KEY)
         self.search_tool = Tool(google_search=GoogleSearch())
         
         self.base_config = {
