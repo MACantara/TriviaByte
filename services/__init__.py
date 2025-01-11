@@ -1,2 +1,4 @@
-# Empty file to make services a package
+from .password_service import PasswordService
+
+__all__ = ['PasswordService']
 
