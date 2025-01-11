@@ -39,10 +39,29 @@ const QuizLogic = {
 
     // Setup quiz submission
     setupQuizSubmission: function() {
-        $('#submitQuiz').off('click').on('click', () => {
+        $(document).on('click', '#submitQuiz', () => {
             if (!this.currentQuiz) return;
+            
+            // Disable submit button and show loading state
+            const $submitBtn = $('#submitQuiz');
+            $submitBtn.prop('disabled', true)
+                     .html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...');
+            
+            // Gather and submit answers
             const answers = this.gatherAnswers();
-            this.submitQuiz(answers);
+            
+            if (answers.length !== this.currentQuiz.questions.length) {
+                alert("Please answer all questions before submitting.");
+                // Reset button state
+                $submitBtn.prop('disabled', false)
+                         .html('<i class="fas fa-check-circle me-2"></i>Submit Answers');
+                return;
+            }
+            
+            // Submit with slight delay for UX
+            setTimeout(() => {
+                this.submitQuiz(answers);
+            }, 500);
         });
     },
 
@@ -71,14 +90,8 @@ const QuizLogic = {
     submitQuiz: function(answers) {
         const quizData = this.currentQuiz;
         
-        if (answers.length !== quizData.questions.length) {
-            alert("Please answer all questions before submitting.");
-            return;
-        }
-
         const resultsDetails = answers.map((answer, index) => {
             const question = quizData.questions[index];
-            // Use correct_answer field for checking
             const isCorrect = this.compareAnswers(answer.userAnswer, question.correct_answer);
             
             return {
@@ -91,7 +104,13 @@ const QuizLogic = {
             };
         });
 
-        QuizUI.displayResults(resultsDetails);
+        // Scroll to top before showing results
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Show results after scroll
+        setTimeout(() => {
+            QuizUI.displayResults(resultsDetails);
+        }, 300);
     },
 
     gatherAnswers: function() {
