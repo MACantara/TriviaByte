@@ -1,35 +1,39 @@
 <div id="gameContainer" class="d-none">
-    <div class="row">
-        <!-- Left column - Score and Streak -->
-        <div class="col-md-3">
-            <div class="text-center mb-4">
-                <h4>Score</h4>
-                <div id="currentScore" class="display-4 fw-bold text-primary">0</div>
-                <div id="streakCounter" class="mt-2">
-                    <span class="badge bg-warning px-3 py-2">
-                        <i class="fas fa-fire me-1"></i>
+    <!-- Game Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Progress bar -->
+        <div class="progress flex-grow-1" style="height: 10px;">
+            <div id="questionProgress" class="progress-bar bg-info" role="progressbar"></div>
+        </div>
+        
+        <!-- Score and Timer Area -->
+        <div class="d-flex align-items-center gap-4 ms-4">
+            <!-- Score -->
+            <div class="text-center">
+                <div class="text-muted small">Score</div>
+                <div id="currentScore" class="h3 mb-0 text-primary">0</div>
+            </div>
+            
+            <!-- Streak -->
+            <div class="text-center">
+                <div class="text-muted small">Streak</div>
+                <div id="streakCounter">
+                    <span class="badge bg-warning px-2 py-1">
                         <span id="currentStreak">0</span>
+                        <i class="fas fa-fire ms-1"></i>
                     </span>
                 </div>
             </div>
+            
+            <!-- Timer -->
+            <div id="timer" class="display-5 fw-bold text-primary" style="min-width: 70px;">20</div>
         </div>
+    </div>
 
-        <!-- Center column - Main game area -->
-        <div class="col-md-9">
-            <!-- Progress and Timer -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="progress flex-grow-1 me-3" style="height: 10px;">
-                    <div id="questionProgress" class="progress-bar bg-info" role="progressbar"></div>
-                </div>
-                <div id="timer" class="display-5 fw-bold text-primary" style="width: 60px;">20</div>
-            </div>
-
-            <!-- Question Area -->
-            <div id="questionDisplay">
-                <h2 id="questionText" class="text-center mb-4 display-6"></h2>
-                <div class="row g-4" id="answerGrid"></div>
-            </div>
-        </div>
+    <!-- Question Area -->
+    <div id="questionDisplay">
+        <h2 id="questionText" class="text-center mb-4 display-6"></h2>
+        <div class="row g-4" id="answerGrid"></div>
     </div>
 
     <!-- Final Results Modal -->
