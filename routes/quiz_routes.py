@@ -26,7 +26,8 @@ def generate():
         
         quiz = quiz_service.generate_quiz(
             num_questions=num_questions,
-            question_types=question_types
+            question_types=question_types,
+            topic=topic
         )
 
         return jsonify({
