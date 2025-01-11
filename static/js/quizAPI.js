@@ -16,6 +16,21 @@ const QuizAPI = {
         }
     },
 
+    saveQuestion: async function(question) {
+        try {
+            const response = await $.ajax({
+                url: '/save-question',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(question)
+            });
+            return response;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    },
+
     parseQuizData: function(response) {
         try {
             let quizData;
