@@ -1,15 +1,15 @@
 <div id="gameContainer" class="d-none">
     <!-- Game Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded-3 shadow-sm">
         <!-- Question Counter and Timer Progress -->
         <div class="d-flex align-items-center flex-grow-1">
-            <div class="bg-light rounded-pill px-3 py-1 me-3 shadow-sm">
+            <div class="bg-light rounded-pill px-3 py-2 me-3 shadow-sm">
                 <span id="currentQuestionNum" class="h5 text-primary fw-bold mb-0">1</span>
-                <span class="text-muted">/</span>
-                <span id="totalQuestions" class="text-muted">5</span>
+                <span class="text-muted fw-medium">/</span>
+                <span id="totalQuestions" class="h6 text-muted mb-0">5</span>
             </div>
-            <!-- Progress bar (now for timer) -->
-            <div class="progress flex-grow-1" style="height: 10px;">
+            <!-- Progress bar -->
+            <div class="progress flex-grow-1 shadow-sm" style="height: 10px;">
                 <div id="timerProgress" class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
             </div>
         </div>
@@ -17,14 +17,17 @@
         <!-- Score and Timer Area -->
         <div class="d-flex align-items-center gap-4 ms-4">
             <!-- Timer -->
-            <div id="timer" class="display-5 fw-bold text-primary" style="min-width: 70px;">20</div>
+            <div class="text-center">
+                <div class="text-muted small fw-medium mb-1">Time</div>
+                <div id="timer" class="h3 fw-bold text-primary mb-0" style="min-width: 50px;">20</div>
+            </div>
             
             <!-- Streak -->
             <div class="text-center">
-                <div class="text-muted small">Streak</div>
+                <div class="text-muted small fw-medium mb-1">Streak</div>
                 <div id="streakCounter">
-                    <span class="badge bg-warning px-2 py-1">
-                        <span id="currentStreak">0</span>
+                    <span class="badge bg-warning px-3 py-2 shadow-sm">
+                        <span id="currentStreak" class="fw-bold">0</span>
                         <i class="fas fa-fire ms-1"></i>
                     </span>
                 </div>
@@ -32,39 +35,39 @@
             
             <!-- Score -->
             <div class="text-center">
-                <div class="text-muted small">Score</div>
-                <div id="currentScore" class="h3 mb-0 text-primary">0</div>
+                <div class="text-muted small fw-medium mb-1">Score</div>
+                <div id="currentScore" class="h3 fw-bold text-primary mb-0">0</div>
             </div>
         </div>
     </div>
 
     <!-- Question Area -->
-    <div id="questionDisplay">
-        <h2 id="questionText" class="text-center mb-4 display-6"></h2>
+    <div id="questionDisplay" class="bg-white rounded-3 shadow-sm p-4 mb-4">
+        <h2 id="questionText" class="text-center mb-4 h3 fw-bold"></h2>
         <div class="row g-4" id="answerGrid"></div>
     </div>
 
     <!-- Final Results Modal -->
     <div id="finalResults" class="text-center mt-4 d-none">
-        <div class="card border-0 shadow-lg">
+        <div class="card border-0 shadow">
             <div class="card-body p-5">
-                <h2 class="display-4 mb-3">Game Over!</h2>
-                <div class="display-1 text-primary mb-4">
+                <h2 class="h2 fw-bold mb-4">Game Over!</h2>
+                <div class="display-4 text-primary fw-bold mb-4">
                     <span id="finalScore">0</span>
-                    <small class="text-muted fs-5">points</small>
+                    <small class="text-muted fs-6 fw-medium">points</small>
                 </div>
                 
-                <div class="row justify-content-center mb-4">
+                <div class="row justify-content-center mb-4 g-3">
                     <div class="col-6 col-md-4">
-                        <div class="border rounded p-3">
-                            <div class="text-muted mb-1">Correct Answers</div>
-                            <div class="h3 mb-0" id="correctAnswers">0</div>
+                        <div class="bg-light rounded-3 p-3 shadow-sm">
+                            <div class="text-muted small fw-medium mb-2">Correct Answers</div>
+                            <div class="h4 fw-bold mb-0" id="correctAnswers">0</div>
                         </div>
                     </div>
                     <div class="col-6 col-md-4">
-                        <div class="border rounded p-3">
-                            <div class="text-muted mb-1">Best Streak</div>
-                            <div class="h3 mb-0">
+                        <div class="bg-light rounded-3 p-3 shadow-sm">
+                            <div class="text-muted small fw-medium mb-2">Best Streak</div>
+                            <div class="h4 fw-bold mb-0">
                                 <span id="bestStreak">0</span>
                                 <i class="fas fa-fire text-warning ms-1"></i>
                             </div>
@@ -72,7 +75,7 @@
                     </div>
                 </div>
 
-                <button id="playAgain" class="btn btn-lg btn-primary px-5">
+                <button id="playAgain" class="btn btn-lg btn-primary px-5 py-3 shadow-sm">
                     <i class="fas fa-redo me-2"></i>Play Again
                 </button>
             </div>
