@@ -20,6 +20,9 @@ const GameUI = {
     // Add mute state
     isMuted: false,
 
+    // Add new property to track countdown sound
+    countdownSound: null,
+
     // Initialize BGM settings
     initBgm: function() {
         this.bgm.loop = true;
@@ -226,6 +229,12 @@ const GameUI = {
     },
 
     handleAnswer: function(answer) {
+        // Stop countdown sound if it's playing
+        if (this.countdownSound) {
+            this.countdownSound.pause();
+            this.countdownSound = null;
+        }
+
         this.isNewQuestion = false;  // Reset flag when answer is given
         clearInterval(this.timer);
         
@@ -397,8 +406,19 @@ const GameUI = {
             'error': 'error.mp3',
             '5-second-countdown': '5-second-countdown.mp3'
         };
-        const audio = new Audio(`/static/sounds/${soundMap[type]}`);
-        audio.play().catch(() => {});
+
+        // If it's the countdown sound, store the reference
+        if (type === '5-second-countdown') {
+            if (this.countdownSound) {
+                this.countdownSound.pause();
+                this.countdownSound = null;
+            }
+            this.countdownSound = new Audio(`/static/sounds/${soundMap[type]}`);
+            this.countdownSound.play().catch(() => {});
+        } else {
+            const audio = new Audio(`/static/sounds/${soundMap[type]}`);
+            audio.play().catch(() => {});
+        }
     },
 
     shuffleArray: function(array) {
