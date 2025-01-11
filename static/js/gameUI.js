@@ -6,6 +6,7 @@ const GameUI = {
     currentStreak: 0,
     bestStreak: 0,
     correctAnswers: 0,
+    isNewQuestion: false,
     
     colors: ['#e21b3c', '#1368ce', '#d89e00', '#26890c'],
     
@@ -51,6 +52,8 @@ const GameUI = {
             this.endGame();
             return;
         }
+
+        this.isNewQuestion = true;  // Set flag when showing new question
 
         const question = this.questions[this.currentQuestion];
         
@@ -119,17 +122,17 @@ const GameUI = {
             // Update color based on time remaining
             if (this.timeLeft <= 5) {
                 $progressBar.removeClass('timer-medium').addClass('timer-low');
+                // Only play sound if this is during an active question
+                if (this.timeLeft === 5 && this.isNewQuestion) {
+                    this.playSound('5-second-countdown');
+                    $('#timer, #timerProgress').addClass('countdown-warning');
+                }
             } else if (this.timeLeft <= 10) {
                 $progressBar.removeClass('timer-high').addClass('timer-medium');
             }
             
-            // Add warning effects at 5 seconds
-            if (this.timeLeft === 5) {
-                this.playSound('5-second-countdown');
-                $('#timer, #timerProgress').addClass('countdown-warning');
-            }
-            
             if (this.timeLeft <= 0) {
+                this.isNewQuestion = false;  // Reset flag when time's up
                 $('#timer, #timerProgress').removeClass('countdown-warning');
                 this.handleAnswer(null);
             }
@@ -137,6 +140,7 @@ const GameUI = {
     },
 
     handleAnswer: function(answer) {
+        this.isNewQuestion = false;  // Reset flag when answer is given
         clearInterval(this.timer);
         
         // Remove previous selections and handle no answer case
