@@ -6,7 +6,7 @@ load_dotenv()
 class Config:
     # Flask settings
     SECRET_KEY = os.getenv('SECRET_KEY')
-    DEBUG = os.getenv('FLASK_DEBUG').lower() == 'true'
+    DEBUG = os.getenv('FLASK_DEBUG')
     HOST = os.getenv('FLASK_HOST')
     PORT = int(os.getenv('FLASK_PORT'))
 
