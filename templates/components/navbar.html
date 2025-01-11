@@ -1,0 +1,10 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('quiz.index') }}">TriviaByte</a>
+        {% if session.get('is_admin') %}
+        <div class="navbar-nav ms-auto">
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light">Logout</a>
+        </div>
+        {% endif %}
+    </div>
+</nav>
