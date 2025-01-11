@@ -44,6 +44,26 @@
     animation: wrong-answer 0.5s;
 }
 
+/* Add styles for the game header */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+#currentScore, #timer {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+}
+
+#streakCounter .badge {
+    font-size: 1rem;
+}
+
 @keyframes correct-answer {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
