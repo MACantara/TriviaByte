@@ -12,6 +12,8 @@ const GameUI = {
     startGame: function(questions) {
         this.resetGame();
         this.questions = questions;
+        // Hide both quiz form and container
+        $('.card.mb-4').addClass('d-none');  // Hide quiz form
         $('#quizContainer').addClass('d-none');
         $('#gameContainer').removeClass('d-none');
         this.showQuestion();
