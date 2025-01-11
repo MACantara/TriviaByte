@@ -92,6 +92,17 @@ const GameUI = {
 
     handleAnswer: function(answer) {
         clearInterval(this.timer);
+        
+        // Remove previous selections
+        $('.answer-btn').removeClass('selected');
+        
+        // Add selected class to clicked button
+        $('.answer-btn').each(function() {
+            if ($(this).text() === answer) {
+                $(this).addClass('selected');
+            }
+        });
+
         const question = this.questions[this.currentQuestion];
         const isCorrect = answer === question.correct_answer;
         
@@ -122,19 +133,45 @@ const GameUI = {
     showAnswerFeedback: function(isCorrect, correctAnswer) {
         $('.answer-btn').prop('disabled', true);
         
-        // Highlight correct and wrong answers
-        $('.answer-btn').each(function() {
-            const btn = $(this);
-            if (btn.text() === correctAnswer) {
-                btn.addClass('correct-answer');
-            }
+        // Gray out non-selected answers with proper opacity
+        $('.answer-btn').not('.selected').each(function() {
+            $(this).animate({
+                backgroundColor: 'rgba(128, 128, 128, 0.8)'
+            }, 300);
         });
 
-        // Wait and show next question
+        // After graying out others, show correct/wrong feedback
         setTimeout(() => {
-            this.currentQuestion++;
-            this.showQuestion();
-        }, 2000);
+            $('.answer-btn.selected').each(function() {
+                const btn = $(this);
+                if (btn.text() === correctAnswer) {
+                    // Correct answer - transition to green
+                    btn.animate({
+                        backgroundColor: 'rgba(40, 167, 69, 1)'  // Solid green
+                    }, 500).addClass('correct-answer');
+                } else {
+                    // Wrong answer - transition to red
+                    btn.animate({
+                        backgroundColor: 'rgba(220, 53, 69, 1)'  // Solid red
+                    }, 500).addClass('wrong-answer');
+                    
+                    // Show correct answer in green
+                    $('.answer-btn').each(function() {
+                        if ($(this).text() === correctAnswer) {
+                            $(this).delay(200).animate({
+                                backgroundColor: 'rgba(40, 167, 69, 1)'  // Solid green
+                            }, 500).addClass('correct-answer');
+                        }
+                    });
+                }
+            });
+
+            // Move to next question after animations
+            setTimeout(() => {
+                this.currentQuestion++;
+                this.showQuestion();
+            }, 1500);
+        }, 600);
     },
 
     endGame: function() {
