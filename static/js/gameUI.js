@@ -10,9 +10,22 @@ const GameUI = {
     
     colors: ['#e21b3c', '#1368ce', '#d89e00', '#26890c'],
     
+    // Add new properties for audio
+    bgm: new Audio('/static/sounds/bgm.mp3'),
+    
+    // Initialize BGM settings
+    initBgm: function() {
+        this.bgm.loop = true;
+        this.bgm.volume = 0.3;
+    },
+
     startGame: function(questions) {
         this.resetGame();
         this.questions = questions;
+        
+        // Start background music
+        this.initBgm();
+        this.bgm.play().catch(() => console.log('BGM autoplay prevented'));
         
         // Update total questions display
         $('#totalQuestions').text(this.questions.length);
@@ -31,6 +44,10 @@ const GameUI = {
     },
 
     resetGame: function() {
+        // Stop background music
+        this.bgm.pause();
+        this.bgm.currentTime = 0;
+        
         this.currentQuestion = 0;
         this.currentScore = 0;
         this.currentStreak = 0;
@@ -105,6 +122,9 @@ const GameUI = {
         $('#timer').text(this.timeLeft);
         $('#timer, #timerProgress').removeClass('countdown-warning');
         
+        // Reset BGM volume
+        this.bgm.volume = 0.3;
+        
         // Reset progress bar state
         const $progressBar = $('#timerProgress');
         $progressBar.removeClass('timer-high timer-medium timer-low')
@@ -126,6 +146,15 @@ const GameUI = {
                 if (this.timeLeft === 5 && this.isNewQuestion) {
                     this.playSound('5-second-countdown');
                     $('#timer, #timerProgress').addClass('countdown-warning');
+                    
+                    // Start fading out BGM but maintain minimal volume
+                    const fadeInterval = setInterval(() => {
+                        if (this.bgm.volume > 0.1) {  // Changed from 0.05 to 0.1
+                            this.bgm.volume = Math.max(0.1, this.bgm.volume - 0.04);  // Slower fade, stop at 0.1
+                        } else {
+                            clearInterval(fadeInterval);
+                        }
+                    }, 200);
                 }
             } else if (this.timeLeft <= 10) {
                 $progressBar.removeClass('timer-high').addClass('timer-medium');
@@ -260,6 +289,17 @@ const GameUI = {
     },
 
     endGame: function() {
+        // Fade out and stop background music
+        const fadeOut = setInterval(() => {
+            if (this.bgm.volume > 0.1) {
+                this.bgm.volume -= 0.1;
+            } else {
+                this.bgm.pause();
+                this.bgm.volume = 0.3; // Reset volume for next game
+                clearInterval(fadeOut);
+            }
+        }, 100);
+
         $('#finalScore').text(this.currentScore);
         $('#correctAnswers').text(this.correctAnswers);
         $('#bestStreak').text(this.bestStreak);
@@ -294,3 +334,8 @@ const GameUI = {
         return shuffled;
     }
 };
+
+// Initialize GameUI when document is ready
+$(document).ready(() => {
+    GameUI.initBgm();
+});
