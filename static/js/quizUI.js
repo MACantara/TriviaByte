@@ -13,9 +13,9 @@ const QuizUI = {
 
     // Show loading state
     showLoading: function() {
-        $('#quizContainer').addClass('d-none');
+        $('#quizContainer').addClass('hidden');
         $('button[type="submit"]').prop('disabled', true).html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...'
+            '<svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...'
         );
     },
 
@@ -27,12 +27,17 @@ const QuizUI = {
     // Display multiple choice question
     displayMultipleChoice: function(question, index, questionBody) {
         const shuffledOptions = this.shuffleArray(question.options);
-        const mcOptions = $('<div>').addClass('options');
+        const mcOptions = $('<div>').addClass('space-y-2');
         shuffledOptions.forEach((option, optionIndex) => {
             mcOptions.append(`
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
-                    <label class="form-check-label w-100 cursor-pointer" for="q${index}_${optionIndex}">${option}</label>
+                <div class="flex items-center space-x-2 p-2 rounded hover:bg-gray-50">
+                    <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
+                           type="radio" 
+                           name="q${index}" 
+                           id="q${index}_${optionIndex}" 
+                           value="${option}">
+                    <label class="ml-2 block text-sm text-gray-700 cursor-pointer flex-grow" 
+                           for="q${index}_${optionIndex}">${option}</label>
                 </div>
             `);
         });
@@ -45,20 +50,20 @@ const QuizUI = {
         questionsContainer.empty();
 
         quiz.questions.forEach((question, index) => {
-            const questionDiv = $('<div>').addClass('card mb-3');
-            const questionBody = $('<div>').addClass('card-body');
+            const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow p-6 mb-4');
+            const questionBody = $('<div>');
             
             // Add question number header
             const questionHeader = $('<div>')
-                .addClass('d-flex align-items-center mb-3')
+                .addClass('mb-4')
                 .append(
-                    $('<h5>')
-                        .addClass('card-title mb-0')
+                    $('<h3>')
+                        .addClass('text-lg font-medium text-gray-900')
                         .text(`Question ${index + 1}`)
                 );
             questionBody.append(questionHeader);
             
-            questionBody.append($('<p>').addClass('card-text').text(question.question));
+            questionBody.append($('<p>').addClass('text-gray-700 mb-4').text(question.question));
             this.displayMultipleChoice(question, index, questionBody);
 
             questionDiv.append(questionBody);
@@ -76,37 +81,37 @@ const QuizUI = {
         const score = Math.round((correctCount / answers.length) * 100);
         questionsContainer.prepend(
             $('<div>')
-                .addClass('alert alert-info mb-4')
+                .addClass('bg-blue-50 border-l-4 border-blue-400 p-4 mb-6')
                 .html(`
-                    <h4 class="alert-heading">Quiz Results</h4>
-                    <p class="mb-0">
-                        <span class="h2">${score}%</span><br>
-                        <span class="text-muted">${correctCount} out of ${answers.length} correct</span>
-                    </p>
+                    <h4 class="text-lg font-medium text-blue-800">Quiz Results</h4>
+                    <div class="mt-2">
+                        <span class="text-4xl font-bold text-blue-600">${score}%</span>
+                        <p class="text-sm text-blue-600">${correctCount} out of ${answers.length} correct</p>
+                    </div>
                 `)
         );
 
         // Display each question with results
         answers.forEach((answer, index) => {
-            const questionDiv = $('<div>').addClass('card mb-3');
-            const questionBody = $('<div>').addClass('card-body');
+            const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow p-6 mb-4');
+            const questionBody = $('<div>');
             
             // Question header with badge
             const badge = $('<span>')
-                .addClass(`badge ${answer.isCorrect ? 'bg-success' : 'bg-danger'} ms-2`)
+                .addClass(`px-2 py-1 rounded-full text-sm ${answer.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`)
                 .text(answer.isCorrect ? 'Correct' : 'Incorrect');
             
             questionBody.append(
                 $('<div>')
-                    .addClass('d-flex justify-content-between align-items-center mb-3')
+                    .addClass('flex justify-between items-center mb-4')
                     .append(
-                        $('<h5>').addClass('card-title mb-0').text(`Question ${index + 1}`),
+                        $('<h3>').addClass('text-lg font-medium text-gray-900').text(`Question ${index + 1}`),
                         badge
                     )
             );
 
             // Question text
-            questionBody.append($('<p>').addClass('card-text mb-3').text(answer.questionText));
+            questionBody.append($('<p>').addClass('text-gray-700 mb-4').text(answer.questionText));
 
             // Display answer options based on question type
             this.displayResultAnswers(answer, questionBody);
@@ -118,11 +123,11 @@ const QuizUI = {
         // Add restart button
         questionsContainer.append(
             $('<button>')
-                .addClass('btn btn-primary mt-3')
+                .addClass('mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2')
                 .text('Start New Quiz')
                 .on('click', () => {
                     $('#quizForm').trigger('reset');
-                    $('#quizContainer').addClass('d-none');
+                    $('#quizContainer').addClass('hidden');
                 })
         );
     },
@@ -130,45 +135,43 @@ const QuizUI = {
     displayReferenceSection: function(references, container) {
         if (!references || references.length === 0) return;
         
-        const refsSection = $('<div>').addClass('mt-3 p-3 bg-light rounded');
-        const refsList = $('<div>').addClass('reference-list');
+        const refsSection = $('<div>').addClass('mt-4 border-t border-gray-200 pt-4');
+        const refsList = $('<div>').addClass('space-y-2');
         
         references.forEach(ref => {
             if (ref.url && ref.title) {
                 refsList.append(
-                    $('<div>').addClass('reference-item mb-2').append(
-                        $('<a>')
-                            .attr({
-                                href: ref.url,
-                                target: '_blank',
-                                rel: 'noopener noreferrer'
-                            })
-                            .addClass('text-decoration-none')
-                            .html(`<i class="fas fa-external-link-alt me-2"></i>${ref.title}`)
-                    )
+                    $('<a>')
+                        .attr({
+                            href: ref.url,
+                            target: '_blank',
+                            rel: 'noopener noreferrer'
+                        })
+                        .addClass('text-sm text-blue-600 hover:text-blue-800 flex items-center')
+                        .html(`<i class="fas fa-external-link-alt mr-2"></i>${ref.title}`)
                 );
             }
         });
         
         if (refsList.children().length > 0) {
             refsSection
-                .append($('<h6>').addClass('mb-3').text('Sources:'))
+                .append($('<h6>').addClass('text-sm font-medium text-gray-900 mb-2').text('Sources:'))
                 .append(refsList);
             container.append(refsSection);
         }
     },
 
     displayResultAnswers: function(answer, container) {
-        const answersSection = $('<div>').addClass('answers-section mb-4');
+        const answersSection = $('<div>').addClass('space-y-4');
         this.displayMCResult(answer, answersSection);
         
         // Add explanation immediately after answers
         if (answer.explanation) {
             const explanationSection = $('<div>')
-                .addClass('explanation-section mt-3 p-3 bg-light border rounded')
+                .addClass('mt-4 p-4 bg-gray-50 rounded-md border border-gray-200')
                 .append(
-                    $('<h6>').addClass('mb-2').text('Explanation:'),
-                    $('<p>').addClass('mb-2').text(answer.explanation)
+                    $('<h6>').addClass('text-sm font-medium text-gray-900 mb-2').text('Explanation:'),
+                    $('<p>').addClass('text-sm text-gray-700').text(answer.explanation)
                 );
             
             // Add references if available
@@ -190,54 +193,34 @@ const QuizUI = {
             const isCorrectAnswer = String(answer.correctAnswer).toLowerCase() === String(option).toLowerCase();
             
             const optionDiv = $('<div>')
-                .addClass('form-check mb-2 p-2 rounded')
-                .toggleClass('bg-success bg-opacity-10', isCorrectAnswer)
-                .toggleClass('border border-2', isUserAnswer)
-                .toggleClass('border-success', isUserAnswer && isCorrectAnswer)
-                .toggleClass('border-danger', isUserAnswer && !isCorrectAnswer);
+                .addClass(`p-3 rounded-md flex items-center space-x-2 ${
+                    isCorrectAnswer ? 'bg-green-50 border border-green-200' :
+                    (isUserAnswer && !isCorrectAnswer) ? 'bg-red-50 border border-red-200' :
+                    'bg-gray-50 border border-gray-200'
+                }`);
             
             optionDiv.append(
-                $('<div>').addClass('d-flex align-items-center').append(
-                    $('<input>')
-                        .addClass('form-check-input me-2')
-                        .attr({
-                            type: 'radio',
-                            disabled: true,
-                            checked: isUserAnswer
-                        }),
-                    $('<label>')
-                        .addClass('form-check-label flex-grow-1')
-                        .text(option),
-                    isUserAnswer && $('<i>')
-                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-success' : 'times text-danger'} ms-2`)
-                )
+                $('<input>')
+                    .addClass('h-4 w-4 text-blue-600')
+                    .attr({
+                        type: 'radio',
+                        disabled: true,
+                        checked: isUserAnswer
+                    }),
+                $('<span>')
+                    .addClass('flex-grow text-sm')
+                    .text(option)
             );
+            
+            if (isUserAnswer || isCorrectAnswer) {
+                optionDiv.append(
+                    $('<i>')
+                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-green-600' : 'times text-red-600'}`)
+                );
+            }
             
             container.append(optionDiv);
         });
-    },
-
-    createAnswerHeader: function(index, badge) {
-        return $('<div>')
-            .addClass('d-flex align-items-center mb-2')
-            .append(
-                $('<strong>').text(`Question ${index + 1}`),
-                badge
-            );
-    },
-
-    createAnswerDetails: function(answer) {
-        return $('<div>').append(
-            $('<div>').addClass('question-text mb-2').text(answer.questionText),
-            $('<div>').addClass('user-answer').html(`
-                <strong>Your answer:</strong> 
-                ${Array.isArray(answer.userAnswer) ? answer.userAnswer.join(', ') : answer.userAnswer || 'No answer provided'}
-            `),
-            $('<div>').addClass('correct-answer').html(`
-                <strong>Correct answer:</strong> 
-                ${Array.isArray(answer.correctAnswer) ? answer.correctAnswer.join(', ') : answer.correctAnswer}
-            `)
-        );
     },
 
     isValidUrl: function(url) {
