@@ -61,7 +61,14 @@
 }
 
 #streakCounter .badge {
-    font-size: 1rem;
+    font-size: 1.35rem;
+    padding: 0.5rem 0.85rem;
+    font-weight: 600;
+}
+
+#streakCounter .fa-fire {
+    font-size: 1.15em;
+    margin-left: 0.4rem;
 }
 
 @keyframes correct-answer {
