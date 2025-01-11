@@ -27,12 +27,12 @@ const QuizUI = {
     // Display multiple choice question
     displayMultipleChoice: function(question, index, questionBody) {
         const shuffledOptions = this.shuffleArray(question.options);
-        const mcOptions = $('<div>').addClass('options');
+        const mcOptions = $('<div>').addClass('d-grid gap-3');
         shuffledOptions.forEach((option, optionIndex) => {
             mcOptions.append(`
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
-                    <label class="form-check-label" for="q${index}_${optionIndex}">${option}</label>
+                    <label class="form-check-label py-2 px-3 bg-light rounded-3 w-100 fw-medium" for="q${index}_${optionIndex}">${option}</label>
                 </div>
             `);
         });
@@ -45,27 +45,34 @@ const QuizUI = {
         questionsContainer.empty();
 
         quiz.questions.forEach((question, index) => {
-            const questionDiv = $('<div>').addClass('card mb-3');
-            const questionBody = $('<div>').addClass('card-body');
+            const questionDiv = $('<div>').addClass('card border-0 shadow-sm rounded-3 mb-4');
+            const questionBody = $('<div>').addClass('card-body p-4');
             
             // Add question header with save button
-            const headerDiv = $('<div>').addClass('d-flex justify-content-between align-items-center mb-3');
+            const headerDiv = $('<div>').addClass('d-flex justify-content-between align-items-center mb-4');
             headerDiv.append(
-                $('<h5>').addClass('card-title mb-0').text(`Question ${index + 1}`),
+                $('<h5>').addClass('fw-bold mb-0').text(`Question ${index + 1}`),
                 $('<button>')
-                    .addClass('btn btn-sm btn-outline-primary save-question')
+                    .addClass('btn btn-outline-primary shadow-sm')
                     .attr('data-question-index', index)
-                    .html('<i class="fas fa-save"></i> Save')
+                    .html('<i class="fas fa-save me-2"></i>Save')
                     .on('click', () => this.handleSaveQuestion(question))
             );
             questionBody.append(headerDiv);
             
-            questionBody.append($('<p>').addClass('card-text mb-3').text(question.question));
+            questionBody.append($('<p>').addClass('card-text mb-4').text(question.question));
             this.displayMultipleChoice(question, index, questionBody);
 
             questionDiv.append(questionBody);
             questionsContainer.append(questionDiv);
         });
+
+        // Add submit button
+        questionsContainer.append(`
+            <button id="submitQuiz" class="btn btn-primary btn-lg w-100 shadow-sm">
+                <i class="fas fa-check-circle me-2"></i>Submit Answers
+            </button>
+        `);
     },
 
     handleSaveQuestion: async function(question) {
@@ -89,17 +96,15 @@ const QuizUI = {
         // Add score summary at the top
         const correctCount = answers.filter(a => a.isCorrect).length;
         const score = Math.round((correctCount / answers.length) * 100);
-        questionsContainer.prepend(
-            $('<div>')
-                .addClass('alert alert-info mb-4')
-                .html(`
-                    <h4 class="alert-heading">Quiz Results</h4>
-                    <p class="mb-0">
-                        <span class="h2">${score}%</span><br>
-                        <span class="text-muted">${correctCount} out of ${answers.length} correct</span>
-                    </p>
-                `)
-        );
+        questionsContainer.prepend(`
+            <div class="card border-0 shadow-sm rounded-3 mb-4">
+                <div class="card-body p-4 text-center">
+                    <h3 class="fw-bold mb-3">Quiz Results</h3>
+                    <div class="display-4 text-primary fw-bold mb-2">${score}%</div>
+                    <div class="text-muted">${correctCount} out of ${answers.length} correct</div>
+                </div>
+            </div>
+        `);
 
         // Display each question with results
         answers.forEach((answer, index) => {
