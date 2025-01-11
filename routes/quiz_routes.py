@@ -7,6 +7,7 @@ from config.database import db
 import logging
 from sqlalchemy.sql import func
 from routes.auth_routes import admin_required, login_required
+from models.analytics import QuestionAnalytics
 
 quiz_bp = Blueprint('quiz', __name__)
 quiz_service = QuizService()
@@ -98,3 +99,20 @@ def get_random_questions():  # Removed @login_required decorator
             'error': "Failed to fetch questions",
             'status': 'error'
         }), 500
+
+@quiz_bp.route('/api/analytics/log', methods=['POST'])
+def log_analytics():
+    try:
+        data = request.get_json()
+        
+        QuestionAnalytics.log_answer(
+            question_id=data['question_id'],
+            question_text=data['question_text'],
+            is_correct=data['is_correct'],
+            time_taken=data['time_taken'],
+            score=data['score']
+        )
+        
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
