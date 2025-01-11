@@ -37,21 +37,11 @@
 }
 
 .answer-btn.correct-answer {
-    animation: correct-answer 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    -webkit-animation: correct-answer 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-origin: center;
-    backface-visibility: hidden;
-    perspective: 1000px;
-    will-change: transform, box-shadow;
+    animation: correct-answer 0.5s;
 }
 
 .answer-btn.wrong-answer {
-    animation: wrong-answer 0.5s cubic-bezier(0.36, 0, 0.66, -0.56);
-    -webkit-animation: wrong-answer 0.5s cubic-bezier(0.36, 0, 0.66, -0.56);
-    transform-origin: center;
-    backface-visibility: hidden;
-    perspective: 1000px;
-    will-change: transform, background-color;
+    animation: wrong-answer 0.5s;
 }
 
 /* Add styles for the game header */
@@ -105,37 +95,16 @@
 }
 
 @keyframes correct-answer {
-    0% { 
-        transform: scale(1); 
-        box-shadow: none;
-    }
-    50% { 
-        transform: scale(1.1); 
-        box-shadow: 0 0 30px rgba(40, 167, 69, 0.5);
-    }
-    100% { 
-        transform: scale(1);
-        box-shadow: none;
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
+    100% { transform: scale(1); }
 }
 
 @keyframes wrong-answer {
-    0% { 
-        transform: translateX(0);
-        background-color: #dc3545;
-    }
-    25% { 
-        transform: translateX(-15px);
-        background-color: #dc3545;
-    }
-    75% { 
-        transform: translateX(15px);
-        background-color: #dc3545;
-    }
-    100% { 
-        transform: translateX(0);
-        background-color: #dc3545;
-    }
+    0% { transform: scale(1); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+    100% { transform: scale(1); }
 }
 
 @keyframes pulse-green {
