@@ -1,11 +1,10 @@
-from sqlalchemy.orm import Session
-from models.quiz import Question
+from models.quiz import Question, db
 from typing import List
 import json
 
 class DatabaseService:
     @staticmethod
-    def store_questions(db: Session, questions: List[dict], topic: str):
+    def store_questions(questions: List[dict], topic: str):
         db_questions = []
         for q in questions:
             db_question = Question(
@@ -16,10 +15,10 @@ class DatabaseService:
             )
             db_questions.append(db_question)
         
-        db.add_all(db_questions)
-        db.commit()
+        db.session.add_all(db_questions)
+        db.session.commit()
         return db_questions
 
     @staticmethod
-    def get_questions_by_topic(db: Session, topic: str):
-        return db.query(Question).filter(Question.topic == topic).all()
+    def get_questions_by_topic(topic: str):
+        return Question.query.filter_by(topic=topic).all()
