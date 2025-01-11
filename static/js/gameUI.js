@@ -426,28 +426,43 @@ const GameUI = {
     },
 
     getFinalMessage: function(correctCount) {
-        if (correctCount >= 3 && correctCount <= 5) {
-            const messages = {
-                3: {
-                    title: 'Good Job!',
-                    subtitle: 'You won a Prize!'
-                },
-                4: {
-                    title: 'Excellent!',
-                    subtitle: 'You won a Prize!'
-                },
-                5: {
-                    title: 'Outstanding!',
-                    subtitle: 'You won a Prize!'
-                }
-            };
-            return messages[correctCount];
-        } else {
-            return {
-                title: 'Game Over!',
-                subtitle: 'Better luck next time! 🎮'
-            };
-        }
+        const messages = {
+            0: [
+                { title: 'Game Over!', subtitle: 'Ready to try again? You got this! 🎮' },
+                { title: 'Oops!', subtitle: 'Everyone starts somewhere. Keep going! 🌟' },
+                { title: 'Not Quite There!', subtitle: 'Practice makes perfect! 💪' }
+            ],
+            1: [
+                { title: 'Nice Try!', subtitle: 'One step at a time! 🎯' },
+                { title: 'Getting Started!', subtitle: 'Room for improvement! 📈' },
+                { title: 'Keep Going!', subtitle: 'You\'re on your way up! 🔝' }
+            ],
+            2: [
+                { title: 'Almost There!', subtitle: 'So close to winning a prize! 🎲' },
+                { title: 'Not Bad!', subtitle: 'Just a bit more practice! 🎯' },
+                { title: 'Good Effort!', subtitle: 'You\'re getting better! 📈' }
+            ],
+            3: [
+                { title: 'Good Job!', subtitle: 'You won a Prize! 🥇' },
+                { title: 'Well Done!', subtitle: 'Bronze achievement unlocked! 🌟' },
+                { title: 'Nice Work!', subtitle: 'You earned bronze! Keep it up! ⭐' }
+            ],
+            4: [
+                { title: 'Excellent!', subtitle: 'You won a Prize! 🥈' },
+                { title: 'Impressive!', subtitle: 'Silver achievement unlocked! ✨' },
+                { title: 'Outstanding!', subtitle: 'Silver rank achieved! 🌟' }
+            ],
+            5: [
+                { title: 'Perfect Score!', subtitle: 'You won a Prize! 🥇' },
+                { title: 'Spectacular!', subtitle: 'Gold achievement unlocked! 🏆' },
+                { title: 'Amazing!', subtitle: 'You\'re a trivia master! 👑' }
+            ]
+        };
+
+        // Get message array for the score and pick a random one
+        const messageArray = messages[correctCount] || messages[0];
+        const randomIndex = Math.floor(Math.random() * messageArray.length);
+        return messageArray[randomIndex];
     },
 
     playSound: function(type) {
