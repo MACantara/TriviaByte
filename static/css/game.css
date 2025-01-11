@@ -52,7 +52,30 @@
 }
 
 .progress-bar {
-    transition: width 0.3s ease;
+    transition: all 1s linear;
+}
+
+.progress-bar.timer-high {
+    background-color: #28a745 !important;
+}
+
+.progress-bar.timer-medium {
+    background-color: #ffc107 !important;
+}
+
+.progress-bar.timer-low {
+    background-color: #dc3545 !important;
+}
+
+/* Smooth transition between states */
+.progress-bar.countdown-warning {
+    animation: progress-flash-red 1s ease-in-out infinite;
+}
+
+@keyframes progress-flash-red {
+    0% { opacity: 1; background-color: #dc3545; }
+    50% { opacity: 0.6; background-color: #ff4d5d; }
+    100% { opacity: 1; background-color: #dc3545; }
 }
 
 #currentScore, #timer {

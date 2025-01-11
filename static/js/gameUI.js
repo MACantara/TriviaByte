@@ -102,6 +102,11 @@ const GameUI = {
         $('#timer').text(this.timeLeft);
         $('#timer, #timerProgress').removeClass('countdown-warning');
         
+        // Reset progress bar state
+        const $progressBar = $('#timerProgress');
+        $progressBar.removeClass('timer-high timer-medium timer-low')
+                   .addClass('timer-high');
+        
         clearInterval(this.timer);
         this.timer = setInterval(() => {
             this.timeLeft--;
@@ -109,7 +114,14 @@ const GameUI = {
             
             // Update timer progress bar
             const progressWidth = (this.timeLeft / 20) * 100;
-            $('#timerProgress').css('width', `${progressWidth}%`);
+            $progressBar.css('width', `${progressWidth}%`);
+            
+            // Update color based on time remaining
+            if (this.timeLeft <= 5) {
+                $progressBar.removeClass('timer-medium').addClass('timer-low');
+            } else if (this.timeLeft <= 10) {
+                $progressBar.removeClass('timer-high').addClass('timer-medium');
+            }
             
             // Add warning effects at 5 seconds
             if (this.timeLeft === 5) {
