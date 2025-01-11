@@ -1,10 +1,10 @@
-<div id="quizContainer" class="d-none">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Your Quiz</h2>
-        <div id="quizTimer" class="timer">
-            Time remaining: <span id="timerDisplay">00:00</span>
+<div id="quizContainer" class="hidden">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Your Quiz</h2>
+        <div id="quizTimer" class="text-lg font-medium">
+            Time remaining: <span id="timerDisplay" class="font-mono">00:00</span>
         </div>
     </div>
-    <div id="questions"></div>
-    <button id="submitQuiz" class="btn btn-success mt-3">Submit Quiz</button>
+    <div id="questions" class="space-y-4"></div>
+    <button id="submitQuiz" class="mt-6 w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Submit Quiz</button>
 </div>
