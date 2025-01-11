@@ -23,6 +23,10 @@ const GameUI = {
     // Add new property to track countdown sound
     countdownSound: null,
 
+    // Add property to track countdown duration
+    countdownDuration: 5000, // 5 seconds in milliseconds
+    countdownTimeout: null,
+
     // Initialize BGM settings
     initBgm: function() {
         this.bgm.loop = true;
@@ -229,10 +233,23 @@ const GameUI = {
     },
 
     handleAnswer: function(answer) {
-        // Stop countdown sound if it's playing
+        // Clear countdown timeout if it exists
+        if (this.countdownTimeout) {
+            clearTimeout(this.countdownTimeout);
+            this.countdownTimeout = null;
+        }
+        
+        // Fade out countdown sound if it's playing
         if (this.countdownSound) {
-            this.countdownSound.pause();
-            this.countdownSound = null;
+            const fadeOut = setInterval(() => {
+                if (this.countdownSound.volume > 0.1) {
+                    this.countdownSound.volume -= 0.1;
+                } else {
+                    this.countdownSound.pause();
+                    this.countdownSound = null;
+                    clearInterval(fadeOut);
+                }
+            }, 50);
         }
 
         this.isNewQuestion = false;  // Reset flag when answer is given
@@ -407,14 +424,28 @@ const GameUI = {
             '5-second-countdown': '5-second-countdown.mp3'
         };
 
-        // If it's the countdown sound, store the reference
+        // Special handling for countdown sound
         if (type === '5-second-countdown') {
+            // Clear any existing countdown
+            if (this.countdownTimeout) {
+                clearTimeout(this.countdownTimeout);
+            }
             if (this.countdownSound) {
                 this.countdownSound.pause();
                 this.countdownSound = null;
             }
+
+            // Create and play new countdown sound
             this.countdownSound = new Audio(`/static/sounds/${soundMap[type]}`);
             this.countdownSound.play().catch(() => {});
+
+            // Set timeout to cleanup after sound duration
+            this.countdownTimeout = setTimeout(() => {
+                if (this.countdownSound) {
+                    this.countdownSound.pause();
+                    this.countdownSound = null;
+                }
+            }, this.countdownDuration);
         } else {
             const audio = new Audio(`/static/sounds/${soundMap[type]}`);
             audio.play().catch(() => {});
