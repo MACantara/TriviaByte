@@ -42,7 +42,7 @@
     transform-origin: center;
     backface-visibility: hidden;
     perspective: 1000px;
-    will-change: transform;
+    will-change: transform, box-shadow;
 }
 
 .answer-btn.wrong-answer {
@@ -51,7 +51,7 @@
     transform-origin: center;
     backface-visibility: hidden;
     perspective: 1000px;
-    will-change: transform;
+    will-change: transform, background-color;
 }
 
 /* Add styles for the game header */
@@ -110,8 +110,8 @@
         box-shadow: none;
     }
     50% { 
-        transform: scale(1.03); 
-        box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+        transform: scale(1.1); 
+        box-shadow: 0 0 30px rgba(40, 167, 69, 0.5);
     }
     100% { 
         transform: scale(1);
@@ -120,10 +120,22 @@
 }
 
 @keyframes wrong-answer {
-    0% { transform: scale(1) translateX(0); }
-    25% { transform: scale(0.98) translateX(-3px); }
-    75% { transform: scale(0.98) translateX(3px); }
-    100% { transform: scale(1) translateX(0); }
+    0% { 
+        transform: translateX(0);
+        background-color: #dc3545;
+    }
+    25% { 
+        transform: translateX(-15px);
+        background-color: #dc3545;
+    }
+    75% { 
+        transform: translateX(15px);
+        background-color: #dc3545;
+    }
+    100% { 
+        transform: translateX(0);
+        background-color: #dc3545;
+    }
 }
 
 @keyframes pulse-green {
@@ -225,28 +237,6 @@
         min-height: 100px;
         font-size: calc(1.1rem + 0.3vw) !important;
     }
-
-    @keyframes correct-answer {
-        0% { 
-            transform: scale(1); 
-            box-shadow: none;
-        }
-        50% { 
-            transform: scale(1.05); 
-            box-shadow: 0 0 20px rgba(40, 167, 69, 0.4);
-        }
-        100% { 
-            transform: scale(1);
-            box-shadow: none;
-        }
-    }
-
-    @keyframes wrong-answer {
-        0% { transform: scale(1) translateX(0); }
-        25% { transform: scale(0.97) translateX(-5px); }
-        75% { transform: scale(0.97) translateX(5px); }
-        100% { transform: scale(1) translateX(0); }
-    }
 }
 
 /* Desktop (lg) */
@@ -258,28 +248,6 @@
     .answer-btn {
         min-height: 120px;
         font-size: calc(1.2rem + 0.4vw) !important;
-    }
-
-    @keyframes correct-answer {
-        0% { 
-            transform: scale(1); 
-            box-shadow: none;
-        }
-        50% { 
-            transform: scale(1.08); 
-            box-shadow: 0 0 25px rgba(40, 167, 69, 0.5);
-        }
-        100% { 
-            transform: scale(1);
-            box-shadow: none;
-        }
-    }
-
-    @keyframes wrong-answer {
-        0% { transform: scale(1) translateX(0); }
-        25% { transform: scale(0.96) translateX(-8px); }
-        75% { transform: scale(0.96) translateX(8px); }
-        100% { transform: scale(1) translateX(0); }
     }
 }
 
