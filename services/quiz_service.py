@@ -6,15 +6,17 @@ class QuizService:
         self.ai_service = AIService()
 
     def _create_prompt(self, topic, num_questions, question_types):
-        return f"""Generate a quiz about {topic} containing exactly {num_questions} multiple choice questions.
+        return f"""Generate {num_questions} general knowledge multiple choice questions that test a broad understanding of {topic}.
         
         Strictly follow these rules:
-        - Challenge users with critical thinking, reading comprehension, and problem-solving
-        - Balance the difficulty of questions to progressively challenge learners while being fair
+        - Questions should cover diverse aspects of {topic} that an educated person might know
+        - Include a mix of historical facts, current events, cultural significance, and practical applications
+        - Make questions engaging and interesting, not just dry facts
         - Each question must have exactly 4 options
         - One and only one option must be correct
-        - All options must be plausible and related to the topic
+        - All options must be plausible and related to the question
         - Don't use options like "All of the above" or "None of the above"
+        - Keep questions accessible to a general audience while being informative
 
         Return a valid JSON object with the following structure:
         {{"questions": [
