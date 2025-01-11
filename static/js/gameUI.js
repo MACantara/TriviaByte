@@ -12,10 +12,17 @@ const GameUI = {
     startGame: function(questions) {
         this.resetGame();
         this.questions = questions;
-        // Hide both quiz form and container
-        $('.card.mb-4').addClass('d-none');  // Hide quiz form
+        
+        // Hide form and quiz container
+        $('.card.mb-4').addClass('d-none');
         $('#quizContainer').addClass('d-none');
+        
+        // Show and reset game container elements
         $('#gameContainer').removeClass('d-none');
+        $('#questionDisplay').removeClass('d-none');
+        $('#scoreDisplay').removeClass('d-none');
+        $('#finalResults').addClass('d-none');
+        
         this.showQuestion();
     },
 
@@ -25,10 +32,14 @@ const GameUI = {
         this.currentStreak = 0;
         this.bestStreak = 0;
         this.correctAnswers = 0;
+        
+        // Reset displays
         $('#currentScore').text('0');
         $('#currentStreak').text('0');
-        $('#scoreDisplay').removeClass('d-none');
-        $('#finalResults').addClass('d-none');
+        $('#questionProgress').css('width', '0%');
+        $('#timer').text('20');
+        $('#questionText').empty();
+        $('#answerGrid').empty();
     },
 
     showQuestion: function() {
