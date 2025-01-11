@@ -48,10 +48,17 @@ const QuizUI = {
             const questionDiv = $('<div>').addClass('card mb-3');
             const questionBody = $('<div>').addClass('card-body');
             
-            // Add question number header
-            questionBody.append(
-                $('<h5>').addClass('card-title mb-3').text(`Question ${index + 1}`)
+            // Add question header with save button
+            const headerDiv = $('<div>').addClass('d-flex justify-content-between align-items-center mb-3');
+            headerDiv.append(
+                $('<h5>').addClass('card-title mb-0').text(`Question ${index + 1}`),
+                $('<button>')
+                    .addClass('btn btn-sm btn-outline-primary save-question')
+                    .attr('data-question-index', index)
+                    .html('<i class="fas fa-save"></i> Save')
+                    .on('click', () => this.handleSaveQuestion(question))
             );
+            questionBody.append(headerDiv);
             
             questionBody.append($('<p>').addClass('card-text mb-3').text(question.question));
             this.displayMultipleChoice(question, index, questionBody);
@@ -59,6 +66,19 @@ const QuizUI = {
             questionDiv.append(questionBody);
             questionsContainer.append(questionDiv);
         });
+    },
+
+    handleSaveQuestion: async function(question) {
+        try {
+            const response = await QuizAPI.saveQuestion(question);
+            if (response.status === 'success') {
+                // Show success notification
+                alert('Question saved successfully!');
+            }
+        } catch (error) {
+            console.error('Error saving question:', error);
+            alert('Failed to save question. Please try again.');
+        }
     },
 
     // Display quiz results
