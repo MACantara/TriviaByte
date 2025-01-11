@@ -1,10 +1,16 @@
 from flask import Flask
-from config import Config
-from routes.quiz_routes import quiz_bp
+from config.settings import Config
+from config.database import init_db
 
-# Create Flask app instance
+# Create Flask app instance first
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Initialize database
+init_db(app)
+
+# Import routes after app creation to avoid circular imports
+from routes.quiz_routes import quiz_bp
 
 # Register blueprints
 app.register_blueprint(quiz_bp)
