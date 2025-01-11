@@ -1,15 +1,60 @@
 .answer-btn {
-    color: white;
+    color: white !important;
     font-size: 1.2rem;
     transition: transform 0.3s ease;
+    opacity: 1 !important;
+    border: none !important;
+}
+
+.answer-btn:hover,
+.answer-btn:active,
+.answer-btn:focus,
+.answer-btn:disabled {
+    opacity: 1 !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.answer-btn.disabled,
+.answer-btn:disabled {
+    opacity: 1 !important;
+    pointer-events: none;
+}
+
+/* Force color to stay at full opacity when grayed out */
+.answer-btn[style*="background-color: rgb(128, 128, 128)"] {
+    opacity: 0.8 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .answer-btn:hover {
     transform: scale(1.05) !important;
 }
 
+.answer-btn.selected {
+    transform: scale(1.05);
+}
+
 .answer-btn.correct-answer {
-    animation: pulse-green 0.5s;
+    animation: correct-answer 0.5s;
+}
+
+.answer-btn.wrong-answer {
+    animation: wrong-answer 0.5s;
+}
+
+@keyframes correct-answer {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
+    100% { transform: scale(1); }
+}
+
+@keyframes wrong-answer {
+    0% { transform: scale(1); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+    100% { transform: scale(1); }
 }
 
 @keyframes pulse-green {
