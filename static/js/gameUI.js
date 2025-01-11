@@ -95,6 +95,11 @@ const GameUI = {
             this.timeLeft--;
             $('#timer').text(this.timeLeft);
             
+            // Play countdown sound at 5 seconds
+            if (this.timeLeft === 5) {
+                this.playSound('5-second-countdown');
+            }
+            
             if (this.timeLeft <= 0) {
                 this.handleAnswer(null);
             }
@@ -149,10 +154,7 @@ const GameUI = {
     showAnswerFeedback: function(isCorrect, correctAnswer, timeOut = false) {
         $('.answer-btn').prop('disabled', true);
         
-        if (timeOut) {
-            // Play error sound immediately when time runs out
-            this.playSound('error');
-            
+        if (timeOut) {          
             // Show "Time's up!" message immediately
             $('#questionText').append(
                 $('<div>')
@@ -240,7 +242,12 @@ const GameUI = {
     },
 
     playSound: function(type) {
-        const audio = new Audio(`/static/sounds/${type}.mp3`);
+        const soundMap = {
+            'success': 'success.mp3',
+            'error': 'error.mp3',
+            '5-second-countdown': '5-second-countdown.mp3'
+        };
+        const audio = new Audio(`/static/sounds/${soundMap[type]}`);
         audio.play().catch(() => {});
     },
 
