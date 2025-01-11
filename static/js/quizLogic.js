@@ -62,8 +62,6 @@ const QuizLogic = {
                 userAnswer: answer.userAnswer,
                 correctAnswer: question.correct_answer,
                 isCorrect: isCorrect,
-                explanation: question.explanation?.text || "No explanation available.",
-                references: question.explanation?.references || [],
                 type: 'multiple_choice',
                 options: question.options
             };
@@ -87,8 +85,7 @@ const QuizLogic = {
                 correctAnswer: question.correct_answer,
                 isCorrect: this.compareAnswers(userAnswer, question.correct_answer),
                 type: 'multiple_choice',
-                explanation: question.explanation,
-                references: question.references || []
+                options: question.options
             });
         });
         return answers;

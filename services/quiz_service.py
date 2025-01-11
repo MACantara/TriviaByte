@@ -65,30 +65,6 @@ class QuizService:
                 else:
                     raise ValueError("Invalid quiz data format")
             
-            # Generate explanations for each question
-            explained_questions = []
-            for question in quiz_data['questions']:
-                try:
-                    explanation_data = self.ai_service.generate_explanation(
-                        question['question'],
-                        question['correct_answer'],
-                        topic
-                    )
-                    question['explanation'] = {
-                        'text': explanation_data['explanation'],
-                        'references': explanation_data['references']
-                    }
-                    explained_questions.append(question)
-                except Exception as e:
-                    logger.error(f"Error generating explanation: {e}")
-                    question['explanation'] = {
-                        'text': "No explanation available.",
-                        'references': []
-                    }
-                    explained_questions.append(question)
-            
-            quiz_data['questions'] = explained_questions
-            
             return quiz_data['questions']
         except Exception as e:
             print(f"Error parsing quiz response: {e}")

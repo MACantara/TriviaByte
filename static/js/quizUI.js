@@ -122,92 +122,42 @@ const QuizUI = {
         );
     },
 
-    displayReferenceSection: function(references, container) {
-        if (!references || references.length === 0) return;
-        
-        const refsSection = $('<div>').addClass('mt-4 border-t border-gray-200 pt-4');
-        const refsList = $('<div>').addClass('space-y-2');
-        
-        references.forEach(ref => {
-            if (ref.url && ref.title) {
-                refsList.append(
-                    $('<a>')
-                        .attr({
-                            href: ref.url,
-                            target: '_blank',
-                            rel: 'noopener noreferrer'
-                        })
-                        .addClass('text-sm text-blue-600 hover:text-blue-800 flex items-center')
-                        .html(`<i class="fas fa-external-link-alt mr-2"></i>${ref.title}`)
-                );
-            }
-        });
-        
-        if (refsList.children().length > 0) {
-            refsSection
-                .append($('<h6>').addClass('text-sm font-medium text-gray-900 mb-2').text('Sources:'))
-                .append(refsList);
-            container.append(refsSection);
-        }
-    },
-
     displayResultAnswers: function(answer, container) {
         const answersSection = $('<div>').addClass('mb-3');
         this.displayMCResult(answer, answersSection);
-        
-        // Add explanation immediately after answers
-        if (answer.explanation) {
-            const explanationSection = $('<div>')
-                .addClass('alert alert-light mt-3')
-                .append(
-                    $('<h6>').addClass('alert-heading mb-2').text('Explanation:'),
-                    $('<p>').addClass('mb-2').text(answer.explanation)
-                );
-            
-            // Add references if available
-            if (answer.references && answer.references.length > 0) {
-                this.displayReferenceSection(answer.references, explanationSection);
-            }
-            
-            answersSection.append(explanationSection);
-        }
-
         container.append(answersSection);
     },
 
     displayMCResult: function(answer, container) {
-        const options = answer.type === 'true_false' ? ['True', 'False'] : answer.options;
+        const options = answer.options;
         
         options.forEach(option => {
             const isUserAnswer = String(answer.userAnswer).toLowerCase() === String(option).toLowerCase();
             const isCorrectAnswer = String(answer.correctAnswer).toLowerCase() === String(option).toLowerCase();
             
             const optionDiv = $('<div>')
-                .addClass(`p-3 rounded-md flex items-center space-x-2 ${
-                    isCorrectAnswer ? 'bg-green-50 border border-green-200' :
-                    (isUserAnswer && !isCorrectAnswer) ? 'bg-red-50 border border-red-200' :
-                    'bg-gray-50 border border-gray-200'
-                }`);
+                .addClass('form-check mb-2 p-2 rounded')
+                .toggleClass('bg-success bg-opacity-10', isCorrectAnswer)
+                .toggleClass('border border-2', isUserAnswer)
+                .toggleClass('border-success', isUserAnswer && isCorrectAnswer)
+                .toggleClass('border-danger', isUserAnswer && !isCorrectAnswer);
             
             optionDiv.append(
-                $('<input>')
-                    .addClass('h-4 w-4 text-blue-600')
-                    .attr({
-                        type: 'radio',
-                        disabled: true,
-                        checked: isUserAnswer
-                    }),
-                $('<span>')
-                    .addClass('flex-grow text-sm')
-                    .text(option)
+                $('<div>').addClass('d-flex align-items-center').append(
+                    $('<input>')
+                        .addClass('form-check-input me-2')
+                        .attr({
+                            type: 'radio',
+                            disabled: true,
+                            checked: isUserAnswer
+                        }),
+                    $('<label>')
+                        .addClass('form-check-label flex-grow')
+                        .text(option),
+                    isUserAnswer && $('<i>')
+                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-success' : 'times text-danger'} ms-2`)
+                )
             );
-            
-            if (isUserAnswer || isCorrectAnswer) {
-                optionDiv.append(
-                    $('<i>')
-                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-green-600' : 'times text-red-600'}`)
-                );
-            }
             
             container.append(optionDiv);
         });
