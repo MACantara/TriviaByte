@@ -3,5 +3,4 @@
 $(document).ready(function() {
     // Initialize quiz functionality
     QuizLogic.init();
-    QuizUI.initializeTimer();
 });
