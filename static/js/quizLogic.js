@@ -26,7 +26,7 @@ const QuizLogic = {
                 const response = await QuizAPI.generateQuiz(quizConfig);
                 this.currentQuiz = QuizAPI.parseQuizData(response);
                 QuizUI.displayQuiz(this.currentQuiz);
-                $('#quizContainer').removeClass('hidden');
+                $('#quizContainer').removeClass('d-none');
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error generating quiz. Please try again.');

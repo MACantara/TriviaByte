@@ -13,9 +13,9 @@ const QuizUI = {
 
     // Show loading state
     showLoading: function() {
-        $('#quizContainer').addClass('hidden');
+        $('#quizContainer').addClass('d-none');
         $('button[type="submit"]').prop('disabled', true).html(
-            '<svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...'
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...'
         );
     },
 
@@ -27,17 +27,12 @@ const QuizUI = {
     // Display multiple choice question
     displayMultipleChoice: function(question, index, questionBody) {
         const shuffledOptions = this.shuffleArray(question.options);
-        const mcOptions = $('<div>').addClass('space-y-2');
+        const mcOptions = $('<div>').addClass('options');
         shuffledOptions.forEach((option, optionIndex) => {
             mcOptions.append(`
-                <div class="flex items-center space-x-2 p-2 rounded hover:bg-gray-50">
-                    <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
-                           type="radio" 
-                           name="q${index}" 
-                           id="q${index}_${optionIndex}" 
-                           value="${option}">
-                    <label class="ml-2 block text-sm text-gray-700 cursor-pointer flex-grow" 
-                           for="q${index}_${optionIndex}">${option}</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
+                    <label class="form-check-label" for="q${index}_${optionIndex}">${option}</label>
                 </div>
             `);
         });
@@ -50,20 +45,15 @@ const QuizUI = {
         questionsContainer.empty();
 
         quiz.questions.forEach((question, index) => {
-            const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow p-6 mb-4');
-            const questionBody = $('<div>');
+            const questionDiv = $('<div>').addClass('card mb-3');
+            const questionBody = $('<div>').addClass('card-body');
             
             // Add question number header
-            const questionHeader = $('<div>')
-                .addClass('mb-4')
-                .append(
-                    $('<h3>')
-                        .addClass('text-lg font-medium text-gray-900')
-                        .text(`Question ${index + 1}`)
-                );
-            questionBody.append(questionHeader);
+            questionBody.append(
+                $('<h5>').addClass('card-title mb-3').text(`Question ${index + 1}`)
+            );
             
-            questionBody.append($('<p>').addClass('text-gray-700 mb-4').text(question.question));
+            questionBody.append($('<p>').addClass('card-text mb-3').text(question.question));
             this.displayMultipleChoice(question, index, questionBody);
 
             questionDiv.append(questionBody);
@@ -81,37 +71,37 @@ const QuizUI = {
         const score = Math.round((correctCount / answers.length) * 100);
         questionsContainer.prepend(
             $('<div>')
-                .addClass('bg-blue-50 border-l-4 border-blue-400 p-4 mb-6')
+                .addClass('alert alert-info mb-4')
                 .html(`
-                    <h4 class="text-lg font-medium text-blue-800">Quiz Results</h4>
-                    <div class="mt-2">
-                        <span class="text-4xl font-bold text-blue-600">${score}%</span>
-                        <p class="text-sm text-blue-600">${correctCount} out of ${answers.length} correct</p>
-                    </div>
+                    <h4 class="alert-heading">Quiz Results</h4>
+                    <p class="mb-0">
+                        <span class="h2">${score}%</span><br>
+                        <span class="text-muted">${correctCount} out of ${answers.length} correct</span>
+                    </p>
                 `)
         );
 
         // Display each question with results
         answers.forEach((answer, index) => {
-            const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow p-6 mb-4');
-            const questionBody = $('<div>');
+            const questionDiv = $('<div>').addClass('card mb-3');
+            const questionBody = $('<div>').addClass('card-body');
             
             // Question header with badge
             const badge = $('<span>')
-                .addClass(`px-2 py-1 rounded-full text-sm ${answer.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`)
+                .addClass(`badge ${answer.isCorrect ? 'bg-success' : 'bg-danger'} ms-2`)
                 .text(answer.isCorrect ? 'Correct' : 'Incorrect');
             
             questionBody.append(
                 $('<div>')
-                    .addClass('flex justify-between items-center mb-4')
+                    .addClass('d-flex justify-content-between align-items-center mb-3')
                     .append(
-                        $('<h3>').addClass('text-lg font-medium text-gray-900').text(`Question ${index + 1}`),
+                        $('<h5>').addClass('card-title mb-0').text(`Question ${index + 1}`),
                         badge
                     )
             );
 
             // Question text
-            questionBody.append($('<p>').addClass('text-gray-700 mb-4').text(answer.questionText));
+            questionBody.append($('<p>').addClass('card-text mb-3').text(answer.questionText));
 
             // Display answer options based on question type
             this.displayResultAnswers(answer, questionBody);
@@ -123,11 +113,11 @@ const QuizUI = {
         // Add restart button
         questionsContainer.append(
             $('<button>')
-                .addClass('mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2')
+                .addClass('btn btn-primary w-100 mt-3')
                 .text('Start New Quiz')
                 .on('click', () => {
                     $('#quizForm').trigger('reset');
-                    $('#quizContainer').addClass('hidden');
+                    $('#quizContainer').addClass('d-none');
                 })
         );
     },
@@ -162,16 +152,16 @@ const QuizUI = {
     },
 
     displayResultAnswers: function(answer, container) {
-        const answersSection = $('<div>').addClass('space-y-4');
+        const answersSection = $('<div>').addClass('mb-3');
         this.displayMCResult(answer, answersSection);
         
         // Add explanation immediately after answers
         if (answer.explanation) {
             const explanationSection = $('<div>')
-                .addClass('mt-4 p-4 bg-gray-50 rounded-md border border-gray-200')
+                .addClass('alert alert-light mt-3')
                 .append(
-                    $('<h6>').addClass('text-sm font-medium text-gray-900 mb-2').text('Explanation:'),
-                    $('<p>').addClass('text-sm text-gray-700').text(answer.explanation)
+                    $('<h6>').addClass('alert-heading mb-2').text('Explanation:'),
+                    $('<p>').addClass('mb-2').text(answer.explanation)
                 );
             
             // Add references if available
