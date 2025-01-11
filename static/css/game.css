@@ -37,11 +37,21 @@
 }
 
 .answer-btn.correct-answer {
-    animation: correct-answer 0.5s;
+    animation: correct-answer 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    -webkit-animation: correct-answer 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
 }
 
 .answer-btn.wrong-answer {
-    animation: wrong-answer 0.5s;
+    animation: wrong-answer 0.5s cubic-bezier(0.36, 0, 0.66, -0.56);
+    -webkit-animation: wrong-answer 0.5s cubic-bezier(0.36, 0, 0.66, -0.56);
+    transform-origin: center;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
 }
 
 /* Add styles for the game header */
@@ -95,16 +105,25 @@
 }
 
 @keyframes correct-answer {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(40, 167, 69, 0.5); }
-    100% { transform: scale(1); }
+    0% { 
+        transform: scale(1); 
+        box-shadow: none;
+    }
+    50% { 
+        transform: scale(1.03); 
+        box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: none;
+    }
 }
 
 @keyframes wrong-answer {
-    0% { transform: scale(1); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1) translateX(0); }
+    25% { transform: scale(0.98) translateX(-3px); }
+    75% { transform: scale(0.98) translateX(3px); }
+    100% { transform: scale(1) translateX(0); }
 }
 
 @keyframes pulse-green {
@@ -206,6 +225,28 @@
         min-height: 100px;
         font-size: calc(1.1rem + 0.3vw) !important;
     }
+
+    @keyframes correct-answer {
+        0% { 
+            transform: scale(1); 
+            box-shadow: none;
+        }
+        50% { 
+            transform: scale(1.05); 
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.4);
+        }
+        100% { 
+            transform: scale(1);
+            box-shadow: none;
+        }
+    }
+
+    @keyframes wrong-answer {
+        0% { transform: scale(1) translateX(0); }
+        25% { transform: scale(0.97) translateX(-5px); }
+        75% { transform: scale(0.97) translateX(5px); }
+        100% { transform: scale(1) translateX(0); }
+    }
 }
 
 /* Desktop (lg) */
@@ -217,6 +258,28 @@
     .answer-btn {
         min-height: 120px;
         font-size: calc(1.2rem + 0.4vw) !important;
+    }
+
+    @keyframes correct-answer {
+        0% { 
+            transform: scale(1); 
+            box-shadow: none;
+        }
+        50% { 
+            transform: scale(1.08); 
+            box-shadow: 0 0 25px rgba(40, 167, 69, 0.5);
+        }
+        100% { 
+            transform: scale(1);
+            box-shadow: none;
+        }
+    }
+
+    @keyframes wrong-answer {
+        0% { transform: scale(1) translateX(0); }
+        25% { transform: scale(0.96) translateX(-8px); }
+        75% { transform: scale(0.96) translateX(8px); }
+        100% { transform: scale(1) translateX(0); }
     }
 }
 
