@@ -34,23 +34,24 @@ def init_db():
         app = create_app()
         
         with app.app_context():
-            logger.info("Creating database tables...")
-            db.drop_all()
-            db.create_all()
+            logger.info("Creating tables if they don't exist...")
+            db.create_all()  # Only create tables that don't exist
             
-            # Create default admin user with secure password
+            # Create default admin user only if no admin exists
             admin_username = os.getenv('ADMIN_USERNAME')
             admin_password = os.getenv('ADMIN_PASSWORD')
             
             if not admin_username or not admin_password:
                 raise ValueError("Admin credentials not found in environment variables")
             
-            admin = User(username=admin_username, is_admin=True)
-            admin.set_password(admin_password)  # This now uses Argon2 with salt and pepper
-            db.session.add(admin)
-            db.session.commit()
+            existing_admin = User.query.filter_by(username=admin_username).first()
+            if not existing_admin:
+                admin = User(username=admin_username, is_admin=True)
+                admin.set_password(admin_password)
+                db.session.add(admin)
+                db.session.commit()
+                logger.info(f"Created default admin user: {admin_username}")
             
-            logger.info(f"Created default admin user: {admin_username}")
             logger.info("Database initialized successfully!")
             
     except Exception as e:
