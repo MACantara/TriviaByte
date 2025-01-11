@@ -241,18 +241,30 @@
 
 /* Mute Button Styles */
 #muteButton {
-    transition: transform 0.2s ease;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
 }
 
 #muteButton:hover {
     transform: scale(1.1);
+    background-color: #e9ecef;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
 }
 
 #muteButton i {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+    color: #6c757d;
     transition: all 0.2s ease;
 }
 
 #muteButton:hover i {
     color: #0d6efd !important;
+}
+
+#muteButton:active {
+    transform: scale(0.95);
 }
