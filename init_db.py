@@ -10,11 +10,15 @@ from dotenv import load_dotenv
 from config.database import db
 from models.user import User
 from models.quiz import Question
+from models.analytics import QuestionAnalytics
 from flask import Flask
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 def create_app():
@@ -22,7 +26,11 @@ def create_app():
     load_dotenv()
     
     # Configure database
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('POSTGRES_URL_NON_POOLING').replace('postgres://', 'postgresql://')
+    db_url = os.getenv('POSTGRES_URL_NON_POOLING')
+    if not db_url:
+        raise ValueError("Database URL not found in environment variables")
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace('postgres://', 'postgresql://')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Initialize database
@@ -34,10 +42,15 @@ def init_db():
         app = create_app()
         
         with app.app_context():
-            logger.info("Creating tables if they don't exist...")
-            db.create_all()  # Only create tables that don't exist
+            logger.info("Creating database tables...")
             
-            # Create default admin user only if no admin exists
+            # Create tables in correct order
+            models = [User, Question, QuestionAnalytics]
+            for model in models:
+                model.__table__.create(db.engine, checkfirst=True)
+                logger.info(f"Created/verified table: {model.__tablename__}")
+            
+            # Create default admin user if needed
             admin_username = os.getenv('ADMIN_USERNAME')
             admin_password = os.getenv('ADMIN_PASSWORD')
             
@@ -52,7 +65,7 @@ def init_db():
                 db.session.commit()
                 logger.info(f"Created default admin user: {admin_username}")
             
-            logger.info("Database initialized successfully!")
+            logger.info("Database initialization completed successfully!")
             
     except Exception as e:
         logger.error(f"Error initializing database: {str(e)}")

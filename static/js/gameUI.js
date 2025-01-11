@@ -293,8 +293,31 @@ const GameUI = {
             $('#currentStreak').text(this.currentStreak);
         }
 
+        // Log analytics data
+        this.logAnswerAnalytics({
+            question_id: question.id,
+            question_text: question.question,
+            is_correct: isCorrect,
+            time_taken: 20 - this.timeLeft,
+            score: isCorrect ? (1000 + (this.timeLeft * 100)) : 0
+        });
+
         // Show answer feedback
         this.showAnswerFeedback(isCorrect, question.correct_answer, answer === null);
+    },
+
+    logAnswerAnalytics: async function(data) {
+        try {
+            await fetch('/api/analytics/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+        } catch (error) {
+            console.error('Error logging analytics:', error);
+        }
     },
 
     showAnswerFeedback: function(isCorrect, correctAnswer, timeOut = false) {
