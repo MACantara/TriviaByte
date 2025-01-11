@@ -213,6 +213,13 @@ const GameUI = {
         $('#questionDisplay').addClass('d-none');
         $('#scoreDisplay').addClass('d-none');
         $('#finalResults').removeClass('d-none');
+
+        // Update Play Again button to return to index
+        $('#playAgain').off('click').on('click', () => {
+            $('#gameContainer').addClass('d-none');
+            $('.card.mb-4').removeClass('d-none');  // Show quiz form
+            this.resetGame();
+        });
     },
 
     playSound: function(type) {
