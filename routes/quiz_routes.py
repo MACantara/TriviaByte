@@ -74,7 +74,7 @@ def save_question():
         }), 500
 
 @quiz_bp.route('/random-questions', methods=['GET'])
-@login_required
+@login_required  # This decorator will now correctly redirect to /auth/login
 def get_random_questions():
     try:
         # Get 5 random questions from the database
