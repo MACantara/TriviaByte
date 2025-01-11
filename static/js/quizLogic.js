@@ -7,6 +7,7 @@ const QuizLogic = {
     init: function() {
         this.setupFormSubmission();
         this.setupQuizSubmission();
+        this.setupRandomQuiz();
     },
 
     // Setup form submission
@@ -45,6 +46,29 @@ const QuizLogic = {
         });
     },
 
+    setupRandomQuiz: function() {
+        $('#randomQuiz').on('click', async (e) => {
+            e.preventDefault();
+            QuizUI.showLoading();
+
+            try {
+                const response = await QuizAPI.getRandomQuestions();
+                if (response.status === 'success' && response.questions.length > 0) {
+                    this.currentQuiz = { questions: response.questions };
+                    QuizUI.displayQuiz(this.currentQuiz);
+                    $('#quizContainer').removeClass('d-none');
+                } else {
+                    alert('No questions available. Try generating new ones!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading random questions. Please try again.');
+            } finally {
+                QuizUI.hideLoading();
+            }
+        });
+    },
+
     submitQuiz: function(answers) {
         const quizData = this.currentQuiz;
         
@@ -55,6 +79,7 @@ const QuizLogic = {
 
         const resultsDetails = answers.map((answer, index) => {
             const question = quizData.questions[index];
+            // Use correct_answer field for checking
             const isCorrect = this.compareAnswers(answer.userAnswer, question.correct_answer);
             
             return {
@@ -79,6 +104,7 @@ const QuizLogic = {
             seenQuestions.add(question.question);
 
             const userAnswer = $(`[name="q${index}"]:checked`).val();
+            // Use correct_answer field for validation
             answers.push({
                 questionText: question.question,
                 userAnswer: userAnswer,

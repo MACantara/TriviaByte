@@ -31,6 +31,20 @@ const QuizAPI = {
         }
     },
 
+    getRandomQuestions: async function() {
+        try {
+            const response = await $.ajax({
+                url: '/random-questions',
+                method: 'GET',
+                contentType: 'application/json'
+            });
+            return response;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    },
+
     parseQuizData: function(response) {
         try {
             let quizData;

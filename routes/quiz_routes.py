@@ -2,8 +2,10 @@ from flask import Blueprint, render_template, request, jsonify, current_app
 from services.quiz_service import QuizService
 from services.ai_service import AIService
 from services.database_service import DatabaseService
+from models.quiz import Question
 from config.database import db
 import logging
+from sqlalchemy.sql import func
 
 quiz_bp = Blueprint('quiz', __name__)
 quiz_service = QuizService()
@@ -65,4 +67,30 @@ def save_question():
         return jsonify({
             'status': 'error',
             'message': "Failed to save question"
+        }), 500
+
+@quiz_bp.route('/random-questions', methods=['GET'])
+def get_random_questions():
+    try:
+        # Get 5 random questions from the database
+        random_questions = Question.query.order_by(func.random()).limit(5).all()
+        
+        questions = [{
+            'id': q.id,
+            'question': q.question,
+            'options': q.options,
+            'correct_answer': q.correct_answer,  # Add correct_answer field
+            'type': 'multiple_choice',
+            'created_at': q.created_at.isoformat()
+        } for q in random_questions]
+
+        return jsonify({
+            'questions': questions,
+            'status': 'success'
+        })
+    except Exception as e:
+        current_app.logger.error(f"Error fetching random questions: {str(e)}")
+        return jsonify({
+            'error': "Failed to fetch questions",
+            'status': 'error'
         }), 500
