@@ -98,6 +98,28 @@
     color: #dc3545 !important;
 }
 
+/* Timer warning state */
+#timer.countdown-warning {
+    animation: timer-pulse 1s ease-in-out infinite;
+    color: #dc3545 !important;
+}
+
+.progress-bar.countdown-warning {
+    animation: progress-flash 1s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); text-shadow: 0 0 15px rgba(220, 53, 69, 0.7); }
+    100% { transform: scale(1); }
+}
+
+@keyframes progress-flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
 .streak-bonus {
     animation: streak-popup 0.5s ease-out;
 }

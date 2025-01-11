@@ -89,18 +89,21 @@ const GameUI = {
     startTimer: function() {
         this.timeLeft = 20;
         $('#timer').text(this.timeLeft);
+        $('#timer, #questionProgress').removeClass('countdown-warning');
         
         clearInterval(this.timer);
         this.timer = setInterval(() => {
             this.timeLeft--;
             $('#timer').text(this.timeLeft);
             
-            // Play countdown sound at 5 seconds
+            // Add warning effects at 5 seconds
             if (this.timeLeft === 5) {
                 this.playSound('5-second-countdown');
+                $('#timer, #questionProgress').addClass('countdown-warning');
             }
             
             if (this.timeLeft <= 0) {
+                $('#timer, #questionProgress').removeClass('countdown-warning');
                 this.handleAnswer(null);
             }
         }, 1000);
