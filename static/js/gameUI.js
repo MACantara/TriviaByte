@@ -311,17 +311,6 @@ const GameUI = {
     },
 
     endGame: function() {
-        // Fade out and stop background music
-        const fadeOut = setInterval(() => {
-            if (this.bgm.volume > 0.1) {
-                this.bgm.volume -= 0.1;
-            } else {
-                this.bgm.pause();
-                this.bgm.volume = 0.3; // Reset volume for next game
-                clearInterval(fadeOut);
-            }
-        }, 100);
-
         $('#finalScore').text(this.currentScore);
         $('#correctAnswers').text(this.correctAnswers);
         $('#bestStreak').text(this.bestStreak);
@@ -329,10 +318,34 @@ const GameUI = {
         $('#scoreDisplay').addClass('d-none');
         $('#finalResults').removeClass('d-none');
 
+        // First fade out BGM completely
+        const fadeOut = setInterval(() => {
+            if (this.bgm.volume > 0.1) {
+                this.bgm.volume -= 0.1;
+            } else {
+                this.bgm.pause();
+                this.bgm.volume = 0.3; // Reset volume for next game
+                clearInterval(fadeOut);
+                
+                // Play results sound after BGM has faded
+                const soundFile = (this.correctAnswers >= 3 && this.correctAnswers <= 5) 
+                    ? 'you-won-a-prize.mp3' 
+                    : 'you-won-nothing.mp3';
+                
+                console.log('Playing end game sound:', soundFile); // Debug log
+                
+                const resultsSound = new Audio(`/static/sounds/${soundFile}`);
+                resultsSound.volume = 1.0; // Ensure full volume
+                resultsSound.play().catch(err => {
+                    console.error('Error playing sound:', err);
+                });
+            }
+        }, 100);
+
         // Update Play Again button to return to index
         $('#playAgain').off('click').on('click', () => {
             $('#gameContainer').addClass('d-none');
-            $('.card.mb-4').removeClass('d-none');  // Show quiz form
+            $('.card.mb-4').removeClass('d-none');
             this.resetGame();
         });
     },
