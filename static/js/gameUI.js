@@ -13,6 +13,9 @@ const GameUI = {
         this.resetGame();
         this.questions = questions;
         
+        // Update total questions display
+        $('#totalQuestions').text(this.questions.length);
+        
         // Hide form and quiz container
         $('.card.mb-4').addClass('d-none');
         $('#quizContainer').addClass('d-none');
@@ -36,7 +39,8 @@ const GameUI = {
         // Reset displays
         $('#currentScore').text('0');
         $('#currentStreak').text('0');
-        $('#questionProgress').css('width', '0%');
+        $('#currentQuestionNum').text('1');
+        $('#timerProgress').css('width', '100%');
         $('#timer').text('20');
         $('#questionText').empty();
         $('#answerGrid').empty();
@@ -49,6 +53,13 @@ const GameUI = {
         }
 
         const question = this.questions[this.currentQuestion];
+        
+        // Update question counter
+        $('#currentQuestionNum').text(this.currentQuestion + 1);
+        
+        // Reset timer progress bar
+        $('#timerProgress').css('width', '100%');
+        
         const progress = ((this.currentQuestion + 1) / this.questions.length) * 100;
         
         // Update progress bar
@@ -89,21 +100,25 @@ const GameUI = {
     startTimer: function() {
         this.timeLeft = 20;
         $('#timer').text(this.timeLeft);
-        $('#timer, #questionProgress').removeClass('countdown-warning');
+        $('#timer, #timerProgress').removeClass('countdown-warning');
         
         clearInterval(this.timer);
         this.timer = setInterval(() => {
             this.timeLeft--;
             $('#timer').text(this.timeLeft);
             
+            // Update timer progress bar
+            const progressWidth = (this.timeLeft / 20) * 100;
+            $('#timerProgress').css('width', `${progressWidth}%`);
+            
             // Add warning effects at 5 seconds
             if (this.timeLeft === 5) {
                 this.playSound('5-second-countdown');
-                $('#timer, #questionProgress').addClass('countdown-warning');
+                $('#timer, #timerProgress').addClass('countdown-warning');
             }
             
             if (this.timeLeft <= 0) {
-                $('#timer, #questionProgress').removeClass('countdown-warning');
+                $('#timer, #timerProgress').removeClass('countdown-warning');
                 this.handleAnswer(null);
             }
         }, 1000);

@@ -1,9 +1,17 @@
 <div id="gameContainer" class="d-none">
     <!-- Game Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <!-- Progress bar -->
-        <div class="progress flex-grow-1" style="height: 10px;">
-            <div id="questionProgress" class="progress-bar bg-info" role="progressbar"></div>
+        <!-- Question Counter and Timer Progress -->
+        <div class="d-flex align-items-center flex-grow-1">
+            <div class="bg-light rounded-pill px-3 py-1 me-3 shadow-sm">
+                <span id="currentQuestionNum" class="h5 text-primary fw-bold mb-0">1</span>
+                <span class="text-muted">/</span>
+                <span id="totalQuestions" class="text-muted">5</span>
+            </div>
+            <!-- Progress bar (now for timer) -->
+            <div class="progress flex-grow-1" style="height: 10px;">
+                <div id="timerProgress" class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
+            </div>
         </div>
         
         <!-- Score and Timer Area -->
