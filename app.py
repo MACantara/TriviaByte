@@ -1,6 +1,8 @@
 from flask import Flask
 from config.settings import Config
 from config.database import init_db
+from routes.quiz_routes import quiz_bp
+from routes.auth_routes import auth_bp  # Add this import
 
 # Create Flask app instance first
 app = Flask(__name__)
@@ -9,11 +11,9 @@ app.config.from_object(Config)
 # Initialize database
 init_db(app)
 
-# Import routes after app creation to avoid circular imports
-from routes.quiz_routes import quiz_bp
-
 # Register blueprints
 app.register_blueprint(quiz_bp)
+app.register_blueprint(auth_bp, url_prefix='/auth')  # Add this line
 
 # Local development server
 if __name__ == '__main__':
