@@ -5,10 +5,10 @@ load_dotenv()
 
 class Config:
     # Flask settings
-    SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
-    DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
-    HOST = os.getenv('FLASK_HOST', '127.0.0.1')
-    PORT = int(os.getenv('FLASK_PORT', 5000))
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    DEBUG = os.getenv('FLASK_DEBUG').lower() == 'true'
+    HOST = os.getenv('FLASK_HOST')
+    PORT = int(os.getenv('FLASK_PORT'))
 
     # Database settings
     POSTGRES_URL = os.getenv('POSTGRES_URL_NON_POOLING')
@@ -23,3 +23,11 @@ class Config:
     # Flask-SQLAlchemy settings
     SQLALCHEMY_DATABASE_URI = POSTGRES_URL.replace('postgres://', 'postgresql://')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Security settings
+    PEPPER = os.getenv('PEPPER')  # Change in production
+    PASSWORD_HASH_TIME_COST = 2      # Number of iterations
+    PASSWORD_HASH_MEMORY_COST = 102400  # Memory usage in KiB
+    PASSWORD_HASH_PARALLELISM = 8    # Number of parallel threads
+    PASSWORD_HASH_LENGTH = 32        # Length of the hash in bytes
+    PASSWORD_SALT_LENGTH = 16        # Length of the salt in bytes
