@@ -375,9 +375,19 @@ const GameUI = {
     },
 
     endGame: function() {
+        const finalMessage = this.getFinalMessage(this.correctAnswers);
+        
+        // Update final results display
         $('#finalScore').text(this.currentScore);
         $('#correctAnswers').text(this.correctAnswers);
         $('#bestStreak').text(this.bestStreak);
+        
+        // Update result message
+        $('.card-body h2').html(`
+            <div class="mb-2">${finalMessage.title}</div>
+            <div class="h5 text-muted fw-normal">${finalMessage.subtitle}</div>
+        `);
+        
         $('#questionDisplay').addClass('d-none');
         $('#scoreDisplay').addClass('d-none');
         $('#finalResults').removeClass('d-none');
@@ -413,6 +423,31 @@ const GameUI = {
             $('.card.mb-4').removeClass('d-none');
             this.resetGame();
         });
+    },
+
+    getFinalMessage: function(correctCount) {
+        if (correctCount >= 3 && correctCount <= 5) {
+            const messages = {
+                3: {
+                    title: 'Good Job!',
+                    subtitle: 'You won a Prize!'
+                },
+                4: {
+                    title: 'Excellent!',
+                    subtitle: 'You won a Prize!'
+                },
+                5: {
+                    title: 'Outstanding!',
+                    subtitle: 'You won a Prize!'
+                }
+            };
+            return messages[correctCount];
+        } else {
+            return {
+                title: 'Game Over!',
+                subtitle: 'Better luck next time! 🎮'
+            };
+        }
     },
 
     playSound: function(type) {
