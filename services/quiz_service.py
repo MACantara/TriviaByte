@@ -4,7 +4,6 @@ from services.ai_service import AIService
 class QuizService:
     def __init__(self):
         self.ai_service = AIService()
-        self.MAX_QUESTIONS = 20
 
     def _create_prompt(self, topic, num_questions, question_types):
         return f"""Generate a quiz about {topic} containing exactly {num_questions} multiple choice questions.
@@ -41,8 +40,8 @@ class QuizService:
     
     def generate_quiz(self, topic, num_questions, question_types):
         try:
-            # Ensure num_questions is within limits
-            num_questions = min(max(int(num_questions), 1), self.MAX_QUESTIONS)
+            # Remove max limit check, keep minimum of 1
+            num_questions = max(int(num_questions), 1)
             prompt = self._create_prompt(topic, num_questions, question_types)
             
             # Pass topic for context-aware generation
