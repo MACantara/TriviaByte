@@ -119,7 +119,7 @@ const GameUI = {
         const question = this.questions[this.currentQuestion];
         const isCorrect = answer === question.correct_answer;
         
-        // Only update score and play sounds if an answer was given
+        // Only update score if an answer was given
         if (answer !== null) {
             if (isCorrect) {
                 const timeBonus = this.timeLeft * 100;
@@ -128,10 +128,13 @@ const GameUI = {
                 this.correctAnswers++;
                 this.currentStreak++;
                 this.bestStreak = Math.max(this.bestStreak, this.currentStreak);
-                this.playSound('success');
+                
+                // Delay sound to match animation
+                setTimeout(() => this.playSound('success'), 600);
             } else {
                 this.currentStreak = 0;
-                this.playSound('error');
+                // Delay sound to match animation
+                setTimeout(() => this.playSound('error'), 600);
             }
             
             // Update score display
