@@ -25,6 +25,10 @@ def admin_required(f):
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # Redirect if already logged in
+    if 'user_id' in session:
+        return redirect(url_for('quiz.index'))
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
