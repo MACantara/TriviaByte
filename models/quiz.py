@@ -1,13 +1,12 @@
-from sqlalchemy import Column, Integer, String, ARRAY, DateTime, Text
-from sqlalchemy.sql import func
-from config.database import Base
+from config.database import db
+from datetime import datetime
 
-class Question(Base):
+class Question(db.Model):
     __tablename__ = "questions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    question = Column(Text, nullable=False)
-    options = Column(ARRAY(String), nullable=False)
-    correct_answer = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    topic = Column(String, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.Text, nullable=False)
+    options = db.Column(db.ARRAY(db.String), nullable=False)
+    correct_answer = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    topic = db.Column(db.String, nullable=False)
