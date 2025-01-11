@@ -1,43 +1,68 @@
 <div id="gameContainer" class="d-none">
-    <!-- Progress bar -->
-    <div class="progress mb-4">
-        <div id="questionProgress" class="progress-bar" role="progressbar" style="width: 0%"></div>
-    </div>
-
-    <!-- Timer -->
-    <div class="text-center mb-4">
-        <div id="timer" class="display-1 fw-bold text-primary">20</div>
-    </div>
-
-    <!-- Question Display -->
-    <div id="questionDisplay">
-        <h2 id="questionText" class="text-center mb-4 display-6"></h2>
-        
-        <!-- Answer Grid -->
-        <div class="row g-4" id="answerGrid">
-            <!-- Options will be inserted here -->
-        </div>
-    </div>
-
-    <!-- Score Display -->
-    <div id="scoreDisplay" class="text-center mt-4 d-none">
-        <h3 class="display-4 mb-3">Score: <span id="currentScore">0</span></h3>
-        <div id="streakCounter" class="mb-3">
-            <span class="badge bg-warning">Streak: <span id="currentStreak">0</span>🔥</span>
-        </div>
-    </div>
-
-    <!-- Final Results -->
-    <div id="finalResults" class="text-center mt-4 d-none">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title">Game Over!</h2>
-                <p class="display-4 text-primary mb-4">Final Score: <span id="finalScore">0</span></p>
-                <div class="stats mb-4">
-                    <p>Correct Answers: <span id="correctAnswers">0</span></p>
-                    <p>Best Streak: <span id="bestStreak">0</span>🔥</p>
+    <div class="row">
+        <!-- Left column - Score and Streak -->
+        <div class="col-md-3">
+            <div class="text-center mb-4">
+                <h4>Score</h4>
+                <div id="currentScore" class="display-4 fw-bold text-primary">0</div>
+                <div id="streakCounter" class="mt-2">
+                    <span class="badge bg-warning px-3 py-2">
+                        <i class="fas fa-fire me-1"></i>
+                        <span id="currentStreak">0</span>
+                    </span>
                 </div>
-                <button id="playAgain" class="btn btn-lg btn-primary">Play Again</button>
+            </div>
+        </div>
+
+        <!-- Center column - Main game area -->
+        <div class="col-md-9">
+            <!-- Progress and Timer -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="progress flex-grow-1 me-3" style="height: 10px;">
+                    <div id="questionProgress" class="progress-bar bg-info" role="progressbar"></div>
+                </div>
+                <div id="timer" class="display-5 fw-bold text-primary" style="width: 60px;">20</div>
+            </div>
+
+            <!-- Question Area -->
+            <div id="questionDisplay">
+                <h2 id="questionText" class="text-center mb-4 display-6"></h2>
+                <div class="row g-4" id="answerGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Results Modal -->
+    <div id="finalResults" class="text-center mt-4 d-none">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5">
+                <h2 class="display-4 mb-3">Game Over!</h2>
+                <div class="display-1 text-primary mb-4">
+                    <span id="finalScore">0</span>
+                    <small class="text-muted fs-5">points</small>
+                </div>
+                
+                <div class="row justify-content-center mb-4">
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded p-3">
+                            <div class="text-muted mb-1">Correct Answers</div>
+                            <div class="h3 mb-0" id="correctAnswers">0</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded p-3">
+                            <div class="text-muted mb-1">Best Streak</div>
+                            <div class="h3 mb-0">
+                                <span id="bestStreak">0</span>
+                                <i class="fas fa-fire text-warning ms-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="playAgain" class="btn btn-lg btn-primary px-5">
+                    <i class="fas fa-redo me-2"></i>Play Again
+                </button>
             </div>
         </div>
     </div>
