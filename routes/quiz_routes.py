@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, jsonify, current_app, session
 from services.quiz_service import QuizService
 from services.ai_service import AIService
 from services.database_service import DatabaseService
@@ -6,6 +6,7 @@ from models.quiz import Question
 from config.database import db
 import logging
 from sqlalchemy.sql import func
+from routes.auth_routes import admin_required, login_required
 
 quiz_bp = Blueprint('quiz', __name__)
 quiz_service = QuizService()
@@ -13,12 +14,14 @@ ai_service = AIService()
 
 @quiz_bp.route('/')
 def index():
+    is_admin = session.get('is_admin', False)
     question_types = [
         {'id': 'multipleChoice', 'value': 'multiple_choice', 'label': 'Multiple Choice'}
     ]
-    return render_template('index.html', question_types=question_types)
+    return render_template('index.html', question_types=question_types, is_admin=is_admin)
 
 @quiz_bp.route('/generate', methods=['POST'])
+@admin_required
 def generate():
     try:
         data = request.get_json()
@@ -45,6 +48,7 @@ def generate():
         }), 500
 
 @quiz_bp.route('/save-question', methods=['POST'])
+@admin_required
 def save_question():
     try:
         question_data = request.get_json()
@@ -70,6 +74,7 @@ def save_question():
         }), 500
 
 @quiz_bp.route('/random-questions', methods=['GET'])
+@login_required
 def get_random_questions():
     try:
         # Get 5 random questions from the database
