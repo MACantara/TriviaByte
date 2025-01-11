@@ -68,9 +68,6 @@ class QuizService:
                 else:
                     raise ValueError("Invalid quiz data format")
             
-            # Store questions using database service
-            DatabaseService.store_questions(quiz_data['questions'], topic)
-            
             return quiz_data['questions']
         except Exception as e:
             print(f"Error parsing quiz response: {e}")
