@@ -127,6 +127,8 @@
 
 <script>
 let analyticsData = [];
+let timeChart = null;
+let accuracyChart = null;
 
 async function loadAnalyticsData() {
     try {
@@ -235,9 +237,13 @@ function calculateTimeDistribution(data) {
 }
 
 function updateCharts(data) {
+    // Destroy existing charts if they exist
+    if (timeChart) timeChart.destroy();
+    if (accuracyChart) accuracyChart.destroy();
+
     // Time distribution chart
     const timeCtx = document.getElementById('timeChart').getContext('2d');
-    new Chart(timeCtx, {
+    timeChart = new Chart(timeCtx, {
         type: 'bar',
         data: {
             labels: ['0-5s', '5-10s', '10-15s', '15-20s'],
@@ -261,7 +267,7 @@ function updateCharts(data) {
 
     // Accuracy vs Time chart
     const accuracyCtx = document.getElementById('accuracyTimeChart').getContext('2d');
-    new Chart(accuracyCtx, {
+    accuracyChart = new Chart(accuracyCtx, {
         type: 'scatter',
         data: {
             datasets: [{
