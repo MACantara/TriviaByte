@@ -1,5 +1,6 @@
 from config.database import db
 from datetime import datetime
+from sqlalchemy import func
 
 class QuestionAnalytics(db.Model):
     __tablename__ = "question_analytics"
@@ -43,11 +44,43 @@ class QuestionAnalytics(db.Model):
     @staticmethod
     def get_all_analytics():
         analytics = QuestionAnalytics.query.all()
+        total_questions = QuestionAnalytics.query.count()
+        
         return [{
             'question': item.question_text,
             'correct_answers': item.correct_count,
             'wrong_answers': item.wrong_count,
             'avg_time_taken': round(item.avg_time_taken, 2),
             'total_score': item.total_score,
-            'accuracy': round((item.correct_count / (item.correct_count + item.wrong_count)) * 100, 1) if (item.correct_count + item.wrong_count) > 0 else 0
+            'accuracy': round((item.correct_count / (item.correct_count + item.wrong_count)) * 100, 1) if (item.correct_count + item.wrong_count) > 0 else 0,
+            'difficulty_score': round((1 - (item.correct_count / (item.correct_count + item.wrong_count))) * 100, 1) if (item.correct_count + item.wrong_count) > 0 else 50,
+            'engagement_rate': round((item.correct_count + item.wrong_count) / total_questions * 100, 1) if total_questions > 0 else 0,
+            'created_at': item.created_at.isoformat()
         } for item in analytics]
+
+    @staticmethod
+    def get_summary_stats():
+        try:
+            result = db.session.query(
+                func.sum(QuestionAnalytics.correct_count).label('total_correct'),
+                func.sum(QuestionAnalytics.wrong_count).label('total_wrong'),
+                func.avg(QuestionAnalytics.avg_time_taken).label('avg_time'),
+                func.sum(QuestionAnalytics.total_score).label('total_score')
+            ).first()
+            
+            total_attempts = (result.total_correct or 0) + (result.total_wrong or 0)
+            
+            return {
+                'total_attempts': total_attempts,
+                'average_accuracy': round((result.total_correct / total_attempts * 100), 1) if total_attempts > 0 else 0,
+                'average_time': round(result.avg_time or 0, 2),
+                'total_score': result.total_score or 0
+            }
+        except Exception as e:
+            current_app.logger.error(f"Error calculating summary stats: {str(e)}")
+            return {
+                'total_attempts': 0,
+                'average_accuracy': 0,
+                'average_time': 0,
+                'total_score': 0
+            }

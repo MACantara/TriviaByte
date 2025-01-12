@@ -2,21 +2,81 @@
 
 {% block content %}
 <div class="container py-4">
+    <!-- Summary Statistics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="text-white-50">Total Questions Answered</h6>
+                    <h2 class="mb-0" id="totalAnswers">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-success text-white">
+                <div class="card-body">
+                    <h6 class="text-white-50">Average Accuracy</h6>
+                    <h2 class="mb-0" id="avgAccuracy">0%</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-info text-white">
+                <div class="card-body">
+                    <h6 class="text-white-50">Avg Response Time</h6>
+                    <h2 class="mb-0" id="avgTime">0s</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-warning text-white">
+                <div class="card-body">
+                    <h6 class="text-white-50">Total Score</h6>
+                    <h2 class="mb-0" id="totalScore">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Analysis -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Response Time Distribution</h5>
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Accuracy by Time Taken</h5>
+                    <canvas id="accuracyTimeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing Analytics Table Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Question Analytics</h1>
+        <h2 class="mb-0">Detailed Question Analysis</h2>
         <div class="d-flex gap-2">
             <select id="sortBy" class="form-select">
                 <option value="accuracy">Sort by Accuracy</option>
                 <option value="total_score">Sort by Total Score</option>
                 <option value="avg_time_taken">Sort by Average Time</option>
                 <option value="correct_answers">Sort by Correct Answers</option>
+                <option value="difficulty">Sort by Difficulty</option>
+                <option value="engagement">Sort by Engagement Rate</option>
             </select>
             <button id="refreshData" class="btn btn-primary">
                 <i class="fas fa-sync-alt"></i>
             </button>
         </div>
     </div>
-    
+
+    <!-- Enhanced Analytics Table -->
     <div class="card border-0 shadow-sm">
         <div class="card-body">
             <div id="loadingState" class="text-center py-5 d-none">
@@ -34,8 +94,10 @@
                             <th class="text-center">Correct</th>
                             <th class="text-center">Wrong</th>
                             <th class="text-center">Avg Time</th>
-                            <th class="text-center">Total Score</th>
+                            <th class="text-center">Score</th>
                             <th class="text-center">Accuracy</th>
+                            <th class="text-center">Difficulty</th>
+                            <th class="text-center">Engagement</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -49,6 +111,9 @@
         </div>
     </div>
 </div>
+
+<!-- Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 let analyticsData = [];
@@ -76,11 +141,31 @@ async function loadAnalyticsData() {
     }
 }
 
+function calculateSummaryStats(data) {
+    const totalAnswers = data.reduce((sum, item) => sum + item.correct_answers + item.wrong_answers, 0);
+    const totalCorrect = data.reduce((sum, item) => sum + item.correct_answers, 0);
+    const avgAccuracy = (totalCorrect / totalAnswers * 100) || 0;
+    const avgTime = data.reduce((sum, item) => sum + item.avg_time_taken, 0) / data.length;
+    const totalScore = data.reduce((sum, item) => sum + item.total_score, 0);
+
+    $('#totalAnswers').text(totalAnswers.toLocaleString());
+    $('#avgAccuracy').text(avgAccuracy.toFixed(1) + '%');
+    $('#avgTime').text(avgTime.toFixed(1) + 's');
+    $('#totalScore').text(totalScore.toLocaleString());
+}
+
 function displayData(data) {
     const tbody = document.querySelector('#analyticsTable tbody');
     tbody.innerHTML = '';
     
+    // Calculate total questions attempts for engagement rate
+    const totalAttempts = data.reduce((max, item) => 
+        Math.max(max, item.correct_answers + item.wrong_answers), 0);
+    
     data.forEach(item => {
+        const engagement = ((item.correct_answers + item.wrong_answers) / totalAttempts * 100).toFixed(1);
+        const difficulty = (100 - item.accuracy).toFixed(1);
+        
         tbody.innerHTML += `
             <tr>
                 <td>${item.question}</td>
@@ -97,9 +182,15 @@ function displayData(data) {
                         </div>
                     </div>
                 </td>
+                <td class="text-center">${difficulty}%</td>
+                <td class="text-center">${engagement}%</td>
             </tr>
         `;
     });
+
+    // Update summary statistics and charts
+    calculateSummaryStats(data);
+    updateCharts(data);
 }
 
 function getAccuracyClass(accuracy) {
@@ -112,6 +203,84 @@ function getAccuracyClass(accuracy) {
 function sortData(field) {
     analyticsData.sort((a, b) => b[field] - a[field]);
     displayData(analyticsData);
+}
+
+function calculateTimeDistribution(data) {
+    const timeRanges = [
+        { min: 0, max: 5 },
+        { min: 5, max: 10 },
+        { min: 10, max: 15 },
+        { min: 15, max: 20 }
+    ];
+
+    return timeRanges.map(range => {
+        return data.reduce((count, item) => {
+            const time = item.avg_time_taken;
+            if (time >= range.min && time < range.max) {
+                return count + item.correct_answers + item.wrong_answers;
+            }
+            return count;
+        }, 0);
+    });
+}
+
+function updateCharts(data) {
+    // Time distribution chart
+    const timeCtx = document.getElementById('timeChart').getContext('2d');
+    new Chart(timeCtx, {
+        type: 'bar',
+        data: {
+            labels: ['0-5s', '5-10s', '10-15s', '15-20s'],
+            datasets: [{
+                label: 'Response Time Distribution',
+                data: calculateTimeDistribution(data),
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Accuracy vs Time chart
+    const accuracyCtx = document.getElementById('accuracyTimeChart').getContext('2d');
+    new Chart(accuracyCtx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Accuracy vs Time',
+                data: data.map(item => ({
+                    x: item.avg_time_taken,
+                    y: item.accuracy
+                })),
+                backgroundColor: 'rgba(255, 99, 132, 0.5)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Average Time (seconds)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Accuracy (%)'
+                    }
+                }
+            }
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
