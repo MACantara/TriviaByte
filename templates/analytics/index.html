@@ -213,7 +213,24 @@ function getAccuracyClass(accuracy) {
 }
 
 function sortData(field) {
-    analyticsData.sort((a, b) => b[field] - a[field]);
+    switch(field) {
+        case 'difficulty':
+            analyticsData.sort((a, b) => {
+                const diffA = (a.wrong_answers / (a.correct_answers + a.wrong_answers)) * 100;
+                const diffB = (b.wrong_answers / (b.correct_answers + b.wrong_answers)) * 100;
+                return diffB - diffA;
+            });
+            break;
+        case 'engagement':
+            analyticsData.sort((a, b) => {
+                const engA = a.correct_answers + a.wrong_answers;
+                const engB = b.correct_answers + b.wrong_answers;
+                return engB - engA;
+            });
+            break;
+        default:
+            analyticsData.sort((a, b) => b[field] - a[field]);
+    }
     displayData(analyticsData);
 }
 

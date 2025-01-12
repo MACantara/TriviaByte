@@ -53,9 +53,8 @@ class QuestionAnalytics(db.Model):
             'avg_time_taken': round(item.avg_time_taken, 2),
             'total_score': item.total_score,
             'accuracy': round((item.correct_count / (item.correct_count + item.wrong_count)) * 100, 1) if (item.correct_count + item.wrong_count) > 0 else 0,
-            # Difficulty: Higher percentage means more people got it wrong
-            'difficulty_score': round((item.wrong_count / (item.correct_count + item.wrong_count)) * 100, 1) if (item.correct_count + item.wrong_count) > 0 else 50,
-            # Engagement: What percentage of total attempts were on this question
+            'difficulty': round((item.wrong_count / (item.correct_count + item.wrong_count)) * 100, 1) if (item.correct_count + item.wrong_count) > 0 else 50,
+            'engagement': item.correct_count + item.wrong_count,  # Raw number of attempts for better sorting
             'engagement_rate': round((item.correct_count + item.wrong_count) / total_attempts_across_all * 100, 1) if total_attempts_across_all > 0 else 0,
             'created_at': item.created_at.isoformat()
         } for item in analytics]
