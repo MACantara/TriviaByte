@@ -1,7 +1,7 @@
 const GameUI = {
     currentQuestion: 0,
     timer: null,
-    timeLeft: 20,
+    timeLeft: 30,  // Changed from 20 to 30
     currentScore: 0,
     currentStreak: 0,
     bestStreak: 0,
@@ -120,7 +120,7 @@ const GameUI = {
         $('#currentStreak').text('0');
         $('#currentQuestionNum').text('1');
         $('#timerProgress').css('width', '100%');
-        $('#timer').text('20');
+        $('#timer').text('30');  // Changed from 20 to 30
         $('#questionText').empty();
         $('#answerGrid').empty();
     },
@@ -179,7 +179,7 @@ const GameUI = {
     },
 
     startTimer: function() {
-        this.timeLeft = 20;
+        this.timeLeft = 30;  // Changed from 20 to 30
         $('#timer').text(this.timeLeft);
         $('#timer, #timerProgress').removeClass('countdown-warning');
         
@@ -200,14 +200,14 @@ const GameUI = {
             $('#timer').text(this.timeLeft);
             
             // Update timer progress bar
-            const progressWidth = (this.timeLeft / 20) * 100;
+            const progressWidth = (this.timeLeft / 30) * 100;  // Changed from 20 to 30
             $progressBar.css('width', `${progressWidth}%`);
             
             // Update color based on time remaining
-            if (this.timeLeft <= 5) {
+            if (this.timeLeft <= 8) {  // Changed from 5 to 8 for better proportion
                 $progressBar.removeClass('timer-medium').addClass('timer-low');
                 // Only play sound if this is during an active question
-                if (this.timeLeft === 5 && this.isNewQuestion) {
+                if (this.timeLeft === 5 && this.isNewQuestion) {  // Changed from 5 to 8
                     this.playSound('5-second-countdown');
                     $('#timer, #timerProgress').addClass('countdown-warning');
                     
@@ -220,7 +220,7 @@ const GameUI = {
                         }
                     }, 200);
                 }
-            } else if (this.timeLeft <= 10) {
+            } else if (this.timeLeft <= 15) {  // Changed from 10 to 15
                 $progressBar.removeClass('timer-high').addClass('timer-medium');
             }
             
@@ -273,7 +273,7 @@ const GameUI = {
         // Only update score if an answer was given
         if (answer !== null) {
             if (isCorrect) {
-                const timeBonus = this.timeLeft * 100;
+                const timeBonus = this.timeLeft * 100;  // Bonus calculation remains same
                 const points = 1000 + timeBonus;
                 this.currentScore += points;
                 this.correctAnswers++;
@@ -298,7 +298,7 @@ const GameUI = {
             question_id: question.id,
             question_text: question.question,
             is_correct: isCorrect,
-            time_taken: 20 - this.timeLeft,
+            time_taken: 30 - this.timeLeft,  // Changed from 20 to 30
             score: isCorrect ? (1000 + (this.timeLeft * 100)) : 0
         });
 

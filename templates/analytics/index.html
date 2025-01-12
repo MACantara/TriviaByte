@@ -236,10 +236,10 @@ function sortData(field) {
 
 function calculateTimeDistribution(data) {
     const timeRanges = [
-        { min: 0, max: 5 },
-        { min: 5, max: 10 },
-        { min: 10, max: 15 },
-        { min: 15, max: 20 }
+        { min: 0, max: 7.5 },    // Changed ranges to split 30 seconds into 4 parts
+        { min: 7.5, max: 15 },
+        { min: 15, max: 22.5 },
+        { min: 22.5, max: 30 }
     ];
 
     return timeRanges.map(range => {
@@ -263,7 +263,7 @@ function updateCharts(data) {
     timeChart = new Chart(timeCtx, {
         type: 'bar',
         data: {
-            labels: ['0-5s', '5-10s', '10-15s', '15-20s'],
+            labels: ['0-7.5s', '7.5-15s', '15-22.5s', '22.5-30s'],  // Updated time range labels
             datasets: [{
                 label: 'Response Time Distribution',
                 data: calculateTimeDistribution(data),
