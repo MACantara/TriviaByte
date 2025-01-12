@@ -96,8 +96,18 @@
                             <th class="text-center">Avg Time</th>
                             <th class="text-center">Score</th>
                             <th class="text-center">Accuracy</th>
-                            <th class="text-center">Difficulty</th>
-                            <th class="text-center">Engagement</th>
+                            <th class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-1">
+                                    Difficulty
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Percentage of wrong answers - higher means more challenging"></i>
+                                </div>
+                            </th>
+                            <th class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-1">
+                                    Engagement
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="How often this question is attempted compared to others"></i>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -288,6 +298,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     $('#sortBy').on('change', (e) => sortData(e.target.value));
     $('#refreshData').on('click', loadAnalyticsData);
+
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 });
 </script>
 {% endblock %}
