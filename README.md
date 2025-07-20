@@ -1,17 +1,21 @@
-# Dynamic Quiz Generator
+# TriviaByte - Dynamic Quiz Generator
 
-A Flask-based web application that generates customized quizzes using Google's Gemini AI. The application can create various types of questions including multiple choice, true/false, and coding-related questions.
+A Flask-based web application that generates customized quizzes using Google's Gemini AI. The application features a difficulty-based gaming system with prizes and interactive gameplay.
 
 ## Features
 
+- **Difficulty-Based Gaming System**: Choose from Easy, Medium, or Hard levels
+- **Prize System**: Win different rewards based on difficulty:
+  - Easy: Candy 🍭
+  - Medium: Biscuit 🍪  
+  - Hard: Keychain 🔑
 - Dynamic quiz generation based on user-specified topics
 - Support for multiple question types:
   - Multiple Choice
-  - True/False
-  - Coding Questions (drag and drop style)
-  - Fill in the blanks
-  - Drag and drop questions
+- Interactive game interface with timers, scoring, and streaks
 - Clean and responsive user interface
+- Admin panel for generating custom quizzes
+- Analytics dashboard for question performance tracking
 - Powered by Google's Gemini AI for intelligent question generation
 
 ## Prerequisites
@@ -53,29 +57,87 @@ python app.py
 2. Open your web browser and navigate to `http://localhost:5000`
 
 3. Use the interface to:
-   - Select a topic for your quiz
-   - Choose the number of questions
-   - Select question types
-   - Generate and take the quiz
+   - **For Players**: Click "Play Game" to select difficulty level and play
+   - **For Admins**: Login to generate custom quizzes with topic and difficulty selection
+   - Choose from Easy, Medium, or Hard difficulty levels
+   - Win prizes based on your chosen difficulty level
+
+## Database Setup
+
+After installation, run the database migration to add difficulty support to existing questions:
+
+```bash
+python migrate_difficulty.py
+```
+
+## Admin Setup
+
+To create an admin user for generating custom quizzes:
+
+```bash
+python create_admin.py
+```
+
+Follow the prompts to create your admin credentials.
+
+## Game Features
+
+### Difficulty Levels
+- **Easy**: Basic knowledge questions - Win Candy 🍭
+- **Medium**: Moderate difficulty questions - Win Biscuit 🍪  
+- **Hard**: Challenging expert-level questions - Win Keychain 🔑
+
+### Gameplay Features
+- Interactive timer-based questions (30 seconds each)
+- Scoring system with streak bonuses
+- Background music and sound effects
+- Mobile-responsive design
+- Real-time analytics tracking
 
 ## Project Structure
 
 ```
-Dynamic_Quiz_Generator/
-├── app.py              # Main Flask application
-├── requirements.txt    # Python dependencies
-├── .env               # Environment variables
-├── static/            # Static files (CSS, JS)
-│   └── style.css      # Custom styling
-└── templates/         # HTML templates
-    └── index.html     # Main page template
+TriviaByte/
+├── app.py                    # Main Flask application
+├── init_db.py               # Database initialization
+├── create_admin.py          # Admin user creation
+├── migrate_difficulty.py    # Database migration for difficulty system
+├── requirements.txt         # Python dependencies
+├── vercel.json             # Vercel deployment config
+├── config/                 # Configuration files
+│   ├── database.py         # Database configuration
+│   └── settings.py         # Application settings
+├── models/                 # Database models
+│   ├── quiz.py            # Quiz and Question models
+│   ├── user.py            # User model
+│   └── analytics.py       # Analytics model
+├── routes/                 # Application routes
+│   ├── quiz_routes.py     # Quiz-related routes
+│   ├── auth_routes.py     # Authentication routes
+│   └── analytics.py       # Analytics routes
+├── services/              # Business logic layer
+│   ├── ai_service.py      # AI integration service
+│   ├── quiz_service.py    # Quiz generation service
+│   ├── database_service.py # Database operations
+│   └── password_service.py # Password utilities
+├── static/                # Static files
+│   ├── css/              # Stylesheets
+│   ├── js/               # JavaScript files
+│   └── sounds/           # Audio files for game
+└── templates/            # HTML templates
+    ├── base.html         # Base template
+    ├── index.html        # Main page
+    ├── level_selection.html # Difficulty selection page
+    ├── auth/             # Authentication templates
+    ├── analytics/        # Analytics templates
+    └── components/       # Reusable components
 ```
 
 ## Dependencies
 
-- Flask (3.1.0): Web framework
-- python-dotenv (1.0.1): Environment variable management
-- google-generativeai (0.8.3): Google Gemini AI integration
+- Flask: Web framework
+- python-dotenv: Environment variable management
+- google-genai: Google Gemini AI integration
 
 ## Getting a Gemini API Key
 
