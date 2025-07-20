@@ -35,9 +35,9 @@ const GameUI = {
         // Initialize mute button state
         const $muteBtn = $('#muteButton i');
         if (this.isMuted) {
-            $muteBtn.removeClass('fa-volume-up').addClass('fa-volume-mute');
+            $muteBtn.removeClass('bi-volume-up').addClass('bi-volume-mute');
         } else {
-            $muteBtn.removeClass('fa-volume-mute').addClass('fa-volume-up');
+            $muteBtn.removeClass('bi-volume-mute').addClass('bi-volume-up');
         }
 
         // Setup mute button handler with proper binding
@@ -52,13 +52,13 @@ const GameUI = {
         
         if (this.isMuted) {
             this.bgm.volume = 0;
-            $muteBtn.removeClass('fa-volume-up').addClass('fa-volume-mute');
+            $muteBtn.removeClass('bi-volume-up').addClass('bi-volume-mute');
         } else {
             if (this.bgm.paused && this.currentQuestion < this.questions?.length) {
                 this.bgm.play();
             }
             this.bgm.volume = this.bgmTargetVolume;
-            $muteBtn.removeClass('fa-volume-mute').addClass('fa-volume-up');
+            $muteBtn.removeClass('bi-volume-mute').addClass('bi-volume-up');
         }
 
         // Store mute preference (optional)
@@ -329,7 +329,7 @@ const GameUI = {
                 $('<div>')
                     .addClass('times-up-message mt-6 text-center')
                     .html(`
-                        <i class="fas fa-clock text-red-600 mb-3 text-4xl"></i>
+                        <i class="bi bi-clock text-red-600 mb-3 text-4xl"></i>
                         <div class="text-2xl text-red-600 font-bold">Time's up!</div>
                     `)
             );

@@ -1,7 +1,7 @@
 <div class="bg-white rounded-lg shadow-md mb-6">
     <div class="p-6 md:p-8">
         <h1 class="text-2xl font-bold text-center mb-6">
-            <i class="fas fa-brain mr-2"></i>TriviaByte
+            <i class="bi bi-book-half mr-2"></i>TriviaByte
         </h1>
         {% if is_admin %}
         <form id="quizForm">
@@ -32,17 +32,17 @@
             </div>
             <div class="space-y-3">
                 <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
-                    <i class="fas fa-magic mr-2"></i>Generate Quiz
+                    <i class="bi bi-magic mr-2"></i>Generate Quiz
                 </button>
                 <button type="button" id="randomQuiz" class="w-full bg-gray-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-random mr-2"></i>Try Random Questions
+                    <i class="bi bi-shuffle mr-2"></i>Try Random Questions
                 </button>
             </div>
         </form>
         {% else %}
         <div class="text-center">
             <button type="button" id="randomQuiz" class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
-                <i class="fas fa-random mr-2"></i>Try Random Questions
+                <i class="bi bi-shuffle mr-2"></i>Try Random Questions
             </button>
         </div>
         {% endif %}

@@ -2,15 +2,15 @@
     <div class="container mx-auto py-4 px-4">
         <div class="flex justify-between items-center">
             <a class="text-white text-xl font-bold flex items-center" href="{{ url_for('quiz.index') }}">
-                <i class="fas fa-brain mr-2"></i>TriviaByte
+                <i class="bi bi-book-half mr-2"></i>TriviaByte
             </a>
             {% if session.get('is_admin') %}
             <div class="flex items-center gap-3">
                 <a href="{{ url_for('analytics.index') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg shadow-sm font-medium hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-chart-bar mr-2"></i>Analytics
+                    <i class="bi bi-graph-up mr-2"></i>Analytics
                 </a>
                 <a href="{{ url_for('auth.logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg shadow-sm font-medium hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    <i class="bi bi-box-arrow-right mr-2"></i>Logout
                 </a>
             </div>
             {% endif %}

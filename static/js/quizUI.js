@@ -55,7 +55,7 @@ const QuizUI = {
                 $('<button>')
                     .addClass('bg-blue-100 text-blue-600 px-4 py-2 rounded-lg shadow-sm hover:bg-blue-200 transition-colors')
                     .attr('data-question-index', index)
-                    .html('<i class="fas fa-save mr-2"></i>Save')
+                    .html('<i class="bi bi-save mr-2"></i>Save')
                     .on('click', () => this.handleSaveQuestion(question))
             );
             questionBody.append(headerDiv);
@@ -70,7 +70,7 @@ const QuizUI = {
         // Add submit button
         questionsContainer.append(`
             <button id="submitQuiz" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
-                <i class="fas fa-check-circle mr-2"></i>Submit Answers
+                <i class="bi bi-check-circle mr-2"></i>Submit Answers
             </button>
         `);
     },
@@ -139,7 +139,7 @@ const QuizUI = {
         questionsContainer.append(
             $('<button>')
                 .addClass('w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors mt-6')
-                .html('<i class="fas fa-redo mr-2"></i>Start New Quiz')
+                .html('<i class="bi bi-arrow-clockwise mr-2"></i>Start New Quiz')
                 .on('click', () => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     setTimeout(() => {
@@ -189,7 +189,7 @@ const QuizUI = {
                         .addClass('flex-1 cursor-default')
                         .text(option),
                     isUserAnswer && $('<i>')
-                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-green-600' : 'times text-red-600'} ml-2`)
+                        .addClass(`bi bi-${isCorrectAnswer ? 'check-lg text-green-600' : 'x-lg text-red-600'} ml-2`)
                 )
             );
             

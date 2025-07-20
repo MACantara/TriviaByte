@@ -54,7 +54,7 @@ const QuizLogic = {
                 alert("Please answer all questions before submitting.");
                 // Reset button state
                 $submitBtn.prop('disabled', false)
-                         .html('<i class="fas fa-check-circle mr-2"></i>Submit Answers');
+                         .html('<i class="bi bi-check-circle mr-2"></i>Submit Answers');
                 return;
             }
             
