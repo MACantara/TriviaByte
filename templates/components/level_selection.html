@@ -73,11 +73,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Debug: Check if required modules are available
     setTimeout(() => {
+        console.log('=== Module Availability Check ===');
         console.log('QuizLogic available:', typeof window.QuizLogic);
         console.log('QuizLogic.startQuizWithDifficulty available:', typeof window.QuizLogic?.startQuizWithDifficulty);
         console.log('GameUI available:', typeof window.GameUI);
         console.log('QuizAPI available:', typeof window.QuizAPI);
-    }, 100);
+        
+        if (window.QuizLogic) {
+            console.log('QuizLogic methods:', Object.getOwnPropertyNames(window.QuizLogic));
+        }
+        console.log('==================================');
+    }, 500); // Wait a bit longer to ensure all scripts are loaded
 
     levelCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -153,12 +159,40 @@ function startRandomQuiz(difficulty = 'medium') {
         });
     } else {
         console.error('QuizLogic.startQuizWithDifficulty not available');
-        alert('Game logic not loaded. Please refresh the page and try again.');
+        console.log('Available QuizLogic properties:', window.QuizLogic ? Object.getOwnPropertyNames(window.QuizLogic) : 'QuizLogic not found');
+        console.log('Attempting fallback to direct API call...');
         
-        // Reset button
-        if (startButton) {
-            startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
-            startButton.disabled = false;
+        // Fallback: Use QuizAPI directly and then GameUI
+        if (window.QuizAPI && window.GameUI) {
+            QuizAPI.getRandomQuestions(difficulty).then(response => {
+                if (response.status === 'success' && response.questions.length > 0) {
+                    console.log('Fallback: Questions loaded, starting GameUI');
+                    // Hide level selection
+                    const levelContainer = document.querySelector('.level-card').closest('.bg-white');
+                    if (levelContainer) {
+                        levelContainer.style.display = 'none';
+                    }
+                    GameUI.startGame(response.questions);
+                } else {
+                    alert('No questions available for this difficulty level.');
+                }
+            }).catch(error => {
+                console.error('Fallback API call failed:', error);
+                alert('Error loading questions. Please try again.');
+            }).finally(() => {
+                // Reset button
+                if (startButton) {
+                    startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
+                    startButton.disabled = false;
+                }
+            });
+        } else {
+            alert('Game components not loaded. Please refresh the page and try again.');
+            // Reset button
+            if (startButton) {
+                startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
+                startButton.disabled = false;
+            }
         }
     }
 }

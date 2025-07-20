@@ -5,9 +5,13 @@ const QuizLogic = {
 
     // Initialize quiz event listeners
     init: function() {
+        console.log('QuizLogic.init() called');
         this.setupFormSubmission();
         this.setupQuizSubmission();
         this.setupRandomQuiz();
+        
+        // Ensure startQuizWithDifficulty is available
+        console.log('QuizLogic.startQuizWithDifficulty available:', typeof this.startQuizWithDifficulty);
     },
 
     // Setup form submission
@@ -166,3 +170,18 @@ const QuizLogic = {
         return String(userAnswer).toLowerCase() === String(correctAnswer).toLowerCase();
     }
 };
+
+// Make sure QuizLogic is globally available and initialize when DOM is ready
+window.QuizLogic = QuizLogic;
+
+// Ensure the startQuizWithDifficulty function is accessible
+$(document).ready(function() {
+    // Double-check that QuizLogic is properly initialized
+    if (typeof window.QuizLogic === 'object' && typeof window.QuizLogic.startQuizWithDifficulty === 'function') {
+        console.log('✅ QuizLogic.startQuizWithDifficulty is ready and accessible');
+    } else {
+        console.error('❌ QuizLogic.startQuizWithDifficulty is not available');
+        console.log('QuizLogic type:', typeof window.QuizLogic);
+        console.log('startQuizWithDifficulty type:', typeof window.QuizLogic?.startQuizWithDifficulty);
+    }
+});
