@@ -13,7 +13,7 @@ class AIService:
         self.search_tool = Tool(google_search=GoogleSearch())
         
         self.base_config = {
-            "temperature": 0.6,
+            "temperature": 0.5,
             "top_p": 0.95,
             "top_k": 40,
             "max_output_tokens": 8192,
