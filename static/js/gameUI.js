@@ -466,11 +466,9 @@ const GameUI = {
             }
         }, 100);
 
-        // Update Play Again button to return to index
+        // Update Play Again button to redirect to home page
         $('#playAgain').off('click').on('click', () => {
-            $('#gameContainer').addClass('hidden');
-            $('.bg-white.rounded-lg.shadow-md.mb-6').removeClass('hidden');
-            this.resetGame();
+            window.location.href = '/';
         });
     },
 
