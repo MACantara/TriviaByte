@@ -19,7 +19,23 @@ def index():
     question_types = [
         {'id': 'multipleChoice', 'value': 'multiple_choice', 'label': 'Multiple Choice'}
     ]
-    return render_template('index.html', question_types=question_types, is_admin=is_admin)
+    difficulty_levels = [
+        {'id': 'easy', 'value': 'easy', 'label': 'Easy', 'prize': 'Candy'},
+        {'id': 'medium', 'value': 'medium', 'label': 'Medium', 'prize': 'Biscuit'},
+        {'id': 'hard', 'value': 'hard', 'label': 'Hard', 'prize': 'Keychain'}
+    ]
+    return render_template('index.html', question_types=question_types, 
+                         difficulty_levels=difficulty_levels, is_admin=is_admin)
+
+@quiz_bp.route('/play')
+def play():
+    """Route for level selection page"""
+    difficulty_levels = [
+        {'id': 'easy', 'value': 'easy', 'label': 'Easy', 'prize': 'Candy'},
+        {'id': 'medium', 'value': 'medium', 'label': 'Medium', 'prize': 'Biscuit'},
+        {'id': 'hard', 'value': 'hard', 'label': 'Hard', 'prize': 'Keychain'}
+    ]
+    return render_template('level_selection.html', difficulty_levels=difficulty_levels)
 
 @quiz_bp.route('/generate', methods=['POST'])
 @admin_required
@@ -29,11 +45,13 @@ def generate():
         topic = data.get('topic')
         num_questions = max(int(data.get('num_questions', 5)), 1)
         question_types = data.get('question_types', ['multiple_choice'])
+        difficulty = data.get('difficulty', 'medium')
         
         quiz = quiz_service.generate_quiz(
             num_questions=num_questions,
             question_types=question_types,
-            topic=topic
+            topic=topic,
+            difficulty=difficulty
         )
 
         return jsonify({
@@ -59,6 +77,7 @@ def save_question():
             question=question_data['question'],
             options=question_data['options'],
             correct_answer=question_data['correct_answer'],
+            difficulty=question_data.get('difficulty', 'medium')
         )
 
         return jsonify({
@@ -77,14 +96,21 @@ def save_question():
 @quiz_bp.route('/random-questions', methods=['GET'])
 def get_random_questions():  # Removed @login_required decorator
     try:
-        # Get 5 random questions from the database
-        random_questions = Question.query.order_by(func.random()).limit(5).all()
+        difficulty = request.args.get('difficulty', 'medium')
+        
+        # Get 5 random questions from the database with specified difficulty
+        random_questions = Question.query.filter_by(difficulty=difficulty).order_by(func.random()).limit(5).all()
+        
+        # If no questions for the specified difficulty, fall back to any difficulty
+        if not random_questions:
+            random_questions = Question.query.order_by(func.random()).limit(5).all()
         
         questions = [{
             'id': q.id,
             'question': q.question,
             'options': q.options,
-            'correct_answer': q.correct_answer,  # Add correct_answer field
+            'correct_answer': q.correct_answer,
+            'difficulty': q.difficulty,
             'type': 'multiple_choice',
             'created_at': q.created_at.isoformat()
         } for q in random_questions]
