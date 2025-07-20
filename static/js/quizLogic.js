@@ -15,10 +15,14 @@ const QuizLogic = {
         $('#quizForm').on('submit', async (e) => {
             e.preventDefault();
             
+            // Get selected difficulty
+            const selectedDifficulty = $('input[name="difficulty"]:checked').val() || 'medium';
+            
             const quizConfig = {
                 topic: $('#topic').val(),
                 num_questions: $('#numQuestions').val(),
-                question_types: ['multiple_choice']
+                question_types: ['multiple_choice'],
+                difficulty: selectedDifficulty
             };
 
             QuizUI.showLoading();
@@ -68,15 +72,19 @@ const QuizLogic = {
     setupRandomQuiz: function() {
         $('#randomQuiz').on('click', async (e) => {
             e.preventDefault();
+            
+            // Check if we're on level selection page
+            const selectedDifficulty = sessionStorage.getItem('selectedDifficulty') || 'medium';
+            
             QuizUI.showLoading();
 
             try {
-                const response = await QuizAPI.getRandomQuestions();
+                const response = await QuizAPI.getRandomQuestions(selectedDifficulty);
                 if (response.status === 'success' && response.questions.length > 0) {
                     // Use GameUI instead of regular quiz display
                     GameUI.startGame(response.questions);
                 } else {
-                    alert('No questions available. Try generating new ones!');
+                    alert('No questions available for this difficulty level. Try generating new ones!');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -85,6 +93,24 @@ const QuizLogic = {
                 QuizUI.hideLoading();
             }
         });
+    },
+
+    // Function to start quiz with specific difficulty (called from level selection)
+    startQuizWithDifficulty: async function(difficulty) {
+        try {
+            const response = await QuizAPI.getRandomQuestions(difficulty);
+            if (response.status === 'success' && response.questions.length > 0) {
+                GameUI.startGame(response.questions);
+                return true;
+            } else {
+                alert('No questions available for this difficulty level.');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error loading questions. Please try again.');
+            return false;
+        }
     },
 
     submitQuiz: function(answers) {
