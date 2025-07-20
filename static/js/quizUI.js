@@ -14,6 +14,7 @@ const QuizUI = {
     // Show loading state
     showLoading: function() {
         $('#quizContainer').addClass('hidden');
+        $('#saveAllQuestions').addClass('hidden'); // Hide save all button
         $('button[type="submit"]').prop('disabled', true).html(
             '<span class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span> Generating...'
         );
@@ -44,6 +45,9 @@ const QuizUI = {
         const questionsContainer = $('#questions');
         questionsContainer.empty();
 
+        // Store quiz data for save all functionality
+        this.currentQuiz = quiz;
+
         quiz.questions.forEach((question, index) => {
             const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow-sm mb-6');
             const questionBody = $('<div>').addClass('p-6');
@@ -73,6 +77,12 @@ const QuizUI = {
                 <i class="bi bi-check-circle mr-2"></i>Submit Answers
             </button>
         `);
+
+        // Show the save all questions button
+        $('#saveAllQuestions').removeClass('hidden');
+        
+        // Setup save all questions button handler
+        $('#saveAllQuestions').off('click').on('click', () => this.handleSaveAllQuestions());
     },
 
     handleSaveQuestion: async function(question) {
@@ -88,10 +98,50 @@ const QuizUI = {
         }
     },
 
+    handleSaveAllQuestions: async function() {
+        if (!this.currentQuiz || !this.currentQuiz.questions) {
+            alert('No questions to save!');
+            return;
+        }
+
+        // Show loading state
+        const $saveAllBtn = $('#saveAllQuestions');
+        const originalText = $saveAllBtn.html();
+        $saveAllBtn.prop('disabled', true).html('<span class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>Saving...');
+
+        try {
+            const response = await QuizAPI.saveAllQuestions(this.currentQuiz.questions);
+            
+            if (response.status === 'success') {
+                alert(`All ${response.saved_count} questions saved successfully!`);
+            } else if (response.status === 'partial_success') {
+                alert(`Saved ${response.saved_count} questions successfully. ${response.failed_count} questions failed to save.\n\nFailed questions: ${response.failed_questions.join(', ')}`);
+            } else {
+                alert('Failed to save questions. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error saving all questions:', error);
+            
+            // Check if it's a partial success response
+            if (error.responseJSON && error.responseJSON.status === 'partial_success') {
+                const data = error.responseJSON;
+                alert(`Saved ${data.saved_count} questions successfully. ${data.failed_count} questions failed to save.\n\nFailed questions: ${data.failed_questions.join(', ')}`);
+            } else {
+                alert('Failed to save questions. Please try again.');
+            }
+        } finally {
+            // Reset button state
+            $saveAllBtn.prop('disabled', false).html(originalText);
+        }
+    },
+
     // Display quiz results
     displayResults: function(answers) {
         const questionsContainer = $('#questions');
         questionsContainer.empty();
+        
+        // Hide the save all questions button since we're showing results
+        $('#saveAllQuestions').addClass('hidden');
         
         // Add score summary at the top
         const correctCount = answers.filter(a => a.isCorrect).length;
@@ -145,6 +195,7 @@ const QuizUI = {
                     setTimeout(() => {
                         $('#quizForm').trigger('reset');
                         $('#quizContainer').addClass('hidden');
+                        $('#saveAllQuestions').addClass('hidden'); // Hide save all button
                         $('.bg-white.rounded-lg.shadow-md.mb-6').removeClass('hidden');
                     }, 300);
                 })

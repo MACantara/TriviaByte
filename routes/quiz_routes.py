@@ -93,6 +93,60 @@ def save_question():
             'message': "Failed to save question"
         }), 500
 
+@quiz_bp.route('/save-all-questions', methods=['POST'])
+@admin_required
+def save_all_questions():
+    try:
+        data = request.get_json()
+        questions_data = data.get('questions', [])
+        
+        if not questions_data:
+            return jsonify({
+                'status': 'error',
+                'message': 'No questions provided'
+            }), 400
+        
+        saved_questions = []
+        failed_questions = []
+        
+        for question_data in questions_data:
+            try:
+                # Save each question
+                saved_question = DatabaseService.store_single_question(
+                    question=question_data['question'],
+                    options=question_data['options'],
+                    correct_answer=question_data['correct_answer'],
+                    difficulty=question_data.get('difficulty', 'medium')
+                )
+                saved_questions.append(saved_question.id)
+            except Exception as e:
+                current_app.logger.error(f"Failed to save question: {question_data.get('question', 'Unknown')}, Error: {str(e)}")
+                failed_questions.append(question_data.get('question', 'Unknown question'))
+
+        if failed_questions:
+            return jsonify({
+                'status': 'partial_success',
+                'message': f'Saved {len(saved_questions)} questions successfully. Failed to save {len(failed_questions)} questions.',
+                'saved_count': len(saved_questions),
+                'failed_count': len(failed_questions),
+                'failed_questions': failed_questions,
+                'saved_question_ids': saved_questions
+            }), 207  # Multi-status
+        else:
+            return jsonify({
+                'status': 'success',
+                'message': f'All {len(saved_questions)} questions saved successfully',
+                'saved_count': len(saved_questions),
+                'saved_question_ids': saved_questions
+            })
+
+    except Exception as e:
+        current_app.logger.error(f"Save all questions error: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': "Failed to save questions"
+        }), 500
+
 @quiz_bp.route('/random-questions', methods=['GET'])
 def get_random_questions():  # Removed @login_required decorator
     try:

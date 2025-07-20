@@ -31,6 +31,21 @@ const QuizAPI = {
         }
     },
 
+    saveAllQuestions: async function(questions) {
+        try {
+            const response = await $.ajax({
+                url: '/save-all-questions',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ questions: questions })
+            });
+            return response;
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    },
+
     getRandomQuestions: async function(difficulty = 'medium') {
         try {
             const response = await $.ajax({
