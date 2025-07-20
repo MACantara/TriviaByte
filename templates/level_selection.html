@@ -12,8 +12,32 @@
     </div>
     
     <!-- Game Display will be shown here during gameplay -->
-    <div id="gameDisplay" style="display: none;">
+    <div id="gameDisplay">
         {% include 'components/game_display.html' %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Debug GameUI availability
+console.log('Level selection page loaded');
+console.log('GameUI available:', typeof window.GameUI);
+console.log('GameUI.startGame available:', typeof window.GameUI?.startGame);
+
+// Initialize GameUI if needed
+$(document).ready(function() {
+    console.log('Document ready - GameUI:', typeof window.GameUI);
+    
+    // Try to initialize GameUI if it exists but isn't ready
+    if (window.GameUI && typeof window.GameUI.initBgm === 'function') {
+        try {
+            // GameUI.initBgm();
+            console.log('GameUI initialized successfully');
+        } catch(e) {
+            console.log('GameUI initialization error:', e);
+        }
+    }
+});
+</script>
 {% endblock %}
