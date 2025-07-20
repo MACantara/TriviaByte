@@ -84,6 +84,32 @@ const GameUI = {
         this.resetGame();
         this.questions = questions;
         
+        // Get difficulty and prize from sessionStorage
+        const difficulty = sessionStorage.getItem('selectedDifficulty') || 'medium';
+        const prize = sessionStorage.getItem('selectedPrize') || 'Biscuit';
+        
+        // Update difficulty display if element exists
+        const $difficultyDisplay = $('#difficultyLevel');
+        if ($difficultyDisplay.length) {
+            $difficultyDisplay.text(difficulty.toUpperCase());
+            $difficultyDisplay.removeClass('text-green-600 text-yellow-600 text-red-600');
+            if (difficulty === 'easy') {
+                $difficultyDisplay.addClass('text-green-600');
+            } else if (difficulty === 'medium') {
+                $difficultyDisplay.addClass('text-yellow-600');
+            } else {
+                $difficultyDisplay.addClass('text-red-600');
+            }
+        }
+        
+        // Update prize display if element exists
+        const $prizeDisplay = $('#prizeDisplay');
+        if ($prizeDisplay.length) {
+            const prizeEmojis = {'Candy': '🍭', 'Biscuit': '🍪', 'Keychain': '🔑'};
+            const emoji = prizeEmojis[prize] || '🏆';
+            $prizeDisplay.text(`${emoji} ${prize}`);
+        }
+        
         // Start background music with fade in
         this.initBgm();
         this.fadeInBgm();
