@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}TriviaByte - Choose Your Level{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    {% include 'components/level_selection.html' %}
+    
+    <!-- Quiz Display will be shown here when game starts -->
+    <div id="quizDisplay" style="display: none;">
+        {% include 'components/quiz_display.html' %}
+    </div>
+    
+    <!-- Game Display will be shown here during gameplay -->
+    <div id="gameDisplay" style="display: none;">
+        {% include 'components/game_display.html' %}
+    </div>
+</div>
+{% endblock %}

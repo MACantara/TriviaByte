@@ -1,0 +1,181 @@
+<div class="bg-white rounded-lg shadow-md mb-6">
+    <div class="p-6 md:p-8">
+        <h1 class="text-2xl font-bold text-center mb-2">
+            <i class="bi bi-book-half mr-2"></i>TriviaByte
+        </h1>
+        <p class="text-center text-gray-600 mb-8">Choose your difficulty level and win amazing prizes!</p>
+        
+        <div class="space-y-4">
+            {% if difficulty_levels %}
+                {% for level in difficulty_levels %}
+                <div class="level-card border-2 border-gray-200 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-colors"
+                     data-difficulty="{{ level.value }}" data-prize="{{ level.prize }}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="difficulty-icon mr-4">
+                                {% if level.value == 'easy' %}
+                                    <i class="bi bi-star text-green-500 text-2xl"></i>
+                                {% elif level.value == 'medium' %}
+                                    <i class="bi bi-star-fill text-yellow-500 text-2xl"></i>
+                                {% else %}
+                                    <i class="bi bi-lightning-fill text-red-500 text-2xl"></i>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold 
+                                    {% if level.value == 'easy' %}text-green-600
+                                    {% elif level.value == 'medium' %}text-yellow-600
+                                    {% else %}text-red-600{% endif %}">
+                                    {{ level.label }}
+                                </h3>
+                                <p class="text-gray-600">
+                                    {% if level.value == 'easy' %}
+                                        Basic questions for beginners
+                                    {% elif level.value == 'medium' %}
+                                        Moderate difficulty questions
+                                    {% else %}
+                                        Challenging questions for experts
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="prize-section text-right">
+                            <div class="text-2xl mb-1">
+                                {% if level.value == 'easy' %}🍭
+                                {% elif level.value == 'medium' %}🍪
+                                {% else %}🔑{% endif %}
+                            </div>
+                            <div class="text-sm font-medium text-gray-700">{{ level.prize }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="mt-8 text-center">
+            <button id="startSelectedLevel" class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-400" disabled>
+                <i class="bi bi-play-fill mr-2"></i>Start Game
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const levelCards = document.querySelectorAll('.level-card');
+    const startButton = document.getElementById('startSelectedLevel');
+    let selectedDifficulty = null;
+    let selectedPrize = null;
+
+    levelCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove selection from all cards
+            levelCards.forEach(c => c.classList.remove('border-blue-500', 'bg-blue-50'));
+            
+            // Add selection to clicked card
+            this.classList.add('border-blue-500', 'bg-blue-50');
+            
+            // Update selected values
+            selectedDifficulty = this.dataset.difficulty;
+            selectedPrize = this.dataset.prize;
+            
+            // Enable start button
+            startButton.disabled = false;
+        });
+    });
+
+    startButton.addEventListener('click', function() {
+        if (selectedDifficulty) {
+            // Store selected difficulty and prize in sessionStorage
+            sessionStorage.setItem('selectedDifficulty', selectedDifficulty);
+            sessionStorage.setItem('selectedPrize', selectedPrize);
+            
+            // Start the game with selected difficulty
+            startRandomQuiz(selectedDifficulty);
+        }
+    });
+});
+
+function startRandomQuiz(difficulty = 'medium') {
+    // Store selected difficulty and prize in sessionStorage
+    sessionStorage.setItem('selectedDifficulty', difficulty);
+    const prizeMap = {'easy': 'Candy', 'medium': 'Biscuit', 'hard': 'Keychain'};
+    sessionStorage.setItem('selectedPrize', prizeMap[difficulty]);
+    
+    // Use the existing quiz logic to start the game
+    if (window.QuizLogic && window.QuizLogic.startQuizWithDifficulty) {
+        QuizLogic.startQuizWithDifficulty(difficulty).then(success => {
+            if (success) {
+                // Hide level selection
+                document.querySelector('.level-card').closest('.bg-white').style.display = 'none';
+            }
+        });
+    } else {
+        // Fallback to API call if QuizLogic is not available
+        fetch(`/random-questions?difficulty=${difficulty}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.questions.length > 0) {
+                    // Hide level selection and show quiz
+                    document.querySelector('.level-card').closest('.bg-white').style.display = 'none';
+                    
+                    // Trigger game start if GameUI is available
+                    if (window.GameUI && window.GameUI.startGame) {
+                        window.GameUI.startGame(data.questions);
+                    } else {
+                        console.error('GameUI not available');
+                        alert('Game interface not loaded. Please refresh the page.');
+                    }
+                } else {
+                    alert('No questions available for this difficulty level. Please try again later.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching questions:', error);
+                alert('Failed to load questions. Please try again.');
+            });
+    }
+}
+
+function loadQuizDisplay(questions, difficulty) {
+    // This function should integrate with your existing quiz display logic
+    console.log('Loading quiz with questions:', questions);
+    console.log('Difficulty:', difficulty);
+    
+    // Store the questions globally for GameUI
+    window.currentGameQuestions = questions;
+    
+    // Trigger your existing quiz logic here
+    if (window.GameUI && window.GameUI.startGame) {
+        window.GameUI.startGame(questions);
+    } else if (window.startQuizGame) {
+        window.startQuizGame(questions);
+    } else {
+        // Last resort: try to find and show game display
+        const gameDisplay = document.getElementById('gameDisplay');
+        if (gameDisplay) {
+            gameDisplay.style.display = 'block';
+            console.warn('GameUI not found, manual initialization required');
+        }
+    }
+}
+
+// Make the function globally available
+window.startRandomQuiz = startRandomQuiz;
+</script>
+
+<style>
+.level-card {
+    transition: all 0.3s ease;
+}
+
+.level-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.level-card.border-blue-500 {
+    background-color: #eff6ff;
+}
+</style>
