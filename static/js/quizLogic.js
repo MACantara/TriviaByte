@@ -8,7 +8,6 @@ const QuizLogic = {
         console.log('QuizLogic.init() called');
         this.setupFormSubmission();
         this.setupQuizSubmission();
-        this.setupRandomQuiz();
         
         // Ensure startQuizWithDifficulty is available
         console.log('QuizLogic.startQuizWithDifficulty available:', typeof this.startQuizWithDifficulty);
@@ -70,32 +69,6 @@ const QuizLogic = {
             setTimeout(() => {
                 this.submitQuiz(answers);
             }, 500);
-        });
-    },
-
-    setupRandomQuiz: function() {
-        $('#randomQuiz').on('click', async (e) => {
-            e.preventDefault();
-            
-            // Check if we're on level selection page
-            const selectedDifficulty = sessionStorage.getItem('selectedDifficulty') || 'medium';
-            
-            QuizUI.showLoading();
-
-            try {
-                const response = await QuizAPI.getRandomQuestions(selectedDifficulty);
-                if (response.status === 'success' && response.questions.length > 0) {
-                    // Use GameUI instead of regular quiz display
-                    GameUI.startGame(response.questions);
-                } else {
-                    alert('No questions available for this difficulty level. Try generating new ones!');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error loading random questions. Please try again.');
-            } finally {
-                QuizUI.hideLoading();
-            }
         });
     },
 
