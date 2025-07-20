@@ -8,4 +8,5 @@ class Question(db.Model):
     question = db.Column(db.Text, nullable=False)
     options = db.Column(db.ARRAY(db.String), nullable=False)
     correct_answer = db.Column(db.String, nullable=False)
+    difficulty = db.Column(db.String, nullable=False, default='medium')  # easy, medium, hard
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
