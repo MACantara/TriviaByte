@@ -31,10 +31,10 @@ const QuizAPI = {
         }
     },
 
-    getRandomQuestions: async function() {
+    getRandomQuestions: async function(difficulty = 'medium') {
         try {
             const response = await $.ajax({
-                url: '/random-questions',
+                url: `/random-questions?difficulty=${difficulty}`,
                 method: 'GET',
                 contentType: 'application/json'
             });
