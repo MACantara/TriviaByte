@@ -1,98 +1,94 @@
-<div id="gameContainer" class="d-none">
+<div id="gameContainer" class="hidden">
     <!-- Game Header -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 p-3 bg-white rounded-3 shadow-sm">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 p-4 bg-white rounded-lg shadow-sm">
         <!-- Timer Progress -->
-        <div class="d-flex align-items-center w-100 mb-3 mb-md-0">
+        <div class="flex items-center w-full mb-4 md:mb-0">
             <!-- Progress bar -->
-            <div class="progress flex-grow-1 shadow-sm" style="height: 10px;">
-                <div id="timerProgress" class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
+            <div class="flex-1 bg-gray-200 rounded-full h-3 shadow-sm">
+                <div id="timerProgress" class="bg-blue-400 h-3 rounded-full transition-all duration-1000" style="width: 100%"></div>
             </div>
             <!-- Mute Button -->
-            <button id="muteButton" class="btn btn-light rounded-circle ms-3 d-flex align-items-center justify-content-center shadow-sm" 
+            <button id="muteButton" class="ml-4 bg-gray-100 hover:bg-gray-200 rounded-full w-10 h-10 flex items-center justify-content-center shadow-sm transition-colors" 
                     aria-label="Toggle sound">
                 <i class="fas fa-volume-up"></i>
             </button>
         </div>
         
         <!-- Score and Timer Area -->
-        <div class="d-flex align-items-center gap-3 gap-md-4 ms-md-4">
+        <div class="flex items-center gap-4 md:gap-6 md:ml-6">
             <!-- Timer -->
             <div class="text-center px-2">
-                <div class="text-muted small fw-medium mb-1">Time</div>
-                <div id="timer" class="h4 h3-md fw-bold text-primary mb-0" style="min-width: 40px;">20</div>
+                <div class="text-gray-500 text-sm font-medium mb-1">Time</div>
+                <div id="timer" class="text-2xl md:text-3xl font-bold text-blue-600" style="min-width: 40px;">20</div>
             </div>
             
             <!-- Streak -->
             <div class="text-center px-2">
-                <div class="text-muted small fw-medium mb-1">Streak</div>
+                <div class="text-gray-500 text-sm font-medium mb-1">Streak</div>
                 <div id="streakCounter">
-                    <span class="badge bg-warning px-2 px-md-3 py-2 shadow-sm">
-                        <span id="currentStreak" class="fw-bold">0</span>
-                        <i class="fas fa-fire ms-1"></i>
+                    <span class="bg-yellow-400 text-black px-3 py-2 rounded-lg shadow-sm font-bold">
+                        <span id="currentStreak">0</span>
+                        <i class="fas fa-fire ml-1"></i>
                     </span>
                 </div>
             </div>
             
             <!-- Score -->
             <div class="text-center px-2">
-                <div class="text-muted small fw-medium mb-1">Score</div>
-                <div id="currentScore" class="h4 h3-md fw-bold text-primary mb-0">0</div>
+                <div class="text-gray-500 text-sm font-medium mb-1">Score</div>
+                <div id="currentScore" class="text-2xl md:text-3xl font-bold text-blue-600">0</div>
             </div>
         </div>
     </div>
 
     <!-- Question Area -->
-    <div id="questionDisplay" class="mb-4">
+    <div id="questionDisplay" class="mb-6">
         <!-- Question Card -->
-        <div class="bg-white rounded-3 shadow-sm p-3 p-md-4 mb-3 mb-md-4">
-            <div class="d-flex flex-column align-items-center">
-                <div class="bg-light rounded-pill px-3 py-2 shadow-sm d-inline-block mb-3">
-                    <span id="currentQuestionNum" class="h5 text-primary fw-bold mb-0">1</span>
-                    <span class="text-muted fw-medium">/</span>
-                    <span id="totalQuestions" class="h6 text-muted mb-0">5</span>
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 md:mb-6">
+            <div class="flex flex-col items-center">
+                <div class="bg-gray-100 rounded-full px-4 py-2 shadow-sm inline-block mb-4">
+                    <span id="currentQuestionNum" class="text-xl text-blue-600 font-bold">1</span>
+                    <span class="text-gray-500 font-medium">/</span>
+                    <span id="totalQuestions" class="text-lg text-gray-500">5</span>
                 </div>
-                <h2 id="questionText" class="text-center h4 h3-md fw-bold mb-0"></h2>
+                <h2 id="questionText" class="text-center text-xl md:text-2xl font-bold"></h2>
             </div>
         </div>
         
         <!-- Answer Grid -->
-        <div class="bg-white rounded-3 shadow-sm p-3 p-md-4">
-            <div class="row g-2 g-md-4 answer-grid" id="answerGrid"></div>
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6" id="answerGrid"></div>
         </div>
     </div>
 
     <!-- Final Results Modal -->
-    <div id="finalResults" class="text-center mt-4 d-none">
-        <div class="card border-0 shadow">
-            <div class="card-body p-3 p-md-5">
+    <div id="finalResults" class="text-center mt-6 hidden">
+        <div class="bg-white rounded-lg shadow-lg">
+            <div class="p-4 md:p-8">
                 <!-- Title and subtitle will be dynamically inserted here -->
-                <h2 class="mb-4"></h2>
+                <h2 class="mb-6"></h2>
                 
-                <div class="display-5 display-4-md text-primary fw-bold mb-4">
+                <div class="text-4xl md:text-5xl text-blue-600 font-bold mb-6">
                     <span id="finalScore">0</span>
-                    <small class="text-muted fs-6 fw-medium">points</small>
+                    <small class="text-gray-500 text-base font-medium">points</small>
                 </div>
                 
-                <div class="row justify-content-center mb-4 g-3">
-                    <div class="col-6">
-                        <div class="bg-light rounded-3 p-3 shadow-sm h-100">
-                            <div class="text-muted small fw-medium mb-2">Correct Answers</div>
-                            <div class="h4 fw-bold mb-0" id="correctAnswers">0</div>
-                        </div>
+                <div class="grid grid-cols-2 gap-4 justify-center mb-6">
+                    <div class="bg-gray-100 rounded-lg p-4 shadow-sm">
+                        <div class="text-gray-500 text-sm font-medium mb-2">Correct Answers</div>
+                        <div class="text-2xl font-bold" id="correctAnswers">0</div>
                     </div>
-                    <div class="col-6">
-                        <div class="bg-light rounded-3 p-3 shadow-sm h-100">
-                            <div class="text-muted small fw-medium mb-2">Best Streak</div>
-                            <div class="h4 fw-bold mb-0">
-                                <span id="bestStreak">0</span>
-                                <i class="fas fa-fire text-warning ms-1"></i>
-                            </div>
+                    <div class="bg-gray-100 rounded-lg p-4 shadow-sm">
+                        <div class="text-gray-500 text-sm font-medium mb-2">Best Streak</div>
+                        <div class="text-2xl font-bold">
+                            <span id="bestStreak">0</span>
+                            <i class="fas fa-fire text-yellow-400 ml-1"></i>
                         </div>
                     </div>
                 </div>
 
-                <button id="playAgain" class="btn btn-lg btn-primary px-4 px-md-5 py-2 py-md-3 shadow-sm w-100 w-md-auto">
-                    <i class="fas fa-redo me-2"></i>Play Again
+                <button id="playAgain" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg shadow-sm font-medium transition-colors">
+                    <i class="fas fa-redo mr-2"></i>Play Again
                 </button>
             </div>
         </div>

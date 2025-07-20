@@ -92,14 +92,14 @@ const GameUI = {
         $('#totalQuestions').text(this.questions.length);
         
         // Hide form and quiz container
-        $('.card.mb-4').addClass('d-none');
-        $('#quizContainer').addClass('d-none');
+        $('.bg-white.rounded-lg.shadow-md.mb-6').addClass('hidden');
+        $('#quizContainer').addClass('hidden');
         
         // Show and reset game container elements
-        $('#gameContainer').removeClass('d-none');
-        $('#questionDisplay').removeClass('d-none');
-        $('#scoreDisplay').removeClass('d-none');
-        $('#finalResults').addClass('d-none');
+        $('#gameContainer').removeClass('hidden');
+        $('#questionDisplay').removeClass('hidden');
+        $('#scoreDisplay').removeClass('hidden');
+        $('#finalResults').addClass('hidden');
         
         this.showQuestion();
     },
@@ -155,10 +155,10 @@ const GameUI = {
         // Shuffle and display options with animations
         this.shuffleArray(question.options).forEach((option, index) => {
             const button = $('<div>')
-                .addClass('col-12 col-sm-6 answer-container')
+                .addClass('answer-container')
                 .append(
                     $('<button>')
-                        .addClass('btn btn-lg w-100 answer-btn')
+                        .addClass('w-full py-4 px-6 text-white font-bold text-lg rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 answer-btn')
                         .css('background-color', this.colors[index])
                         .css('transform', 'scale(0)')
                         .text(option)
@@ -327,10 +327,10 @@ const GameUI = {
             // Show "Time's up!" message with improved styling
             $('#questionText').append(
                 $('<div>')
-                    .addClass('times-up-message mt-4 text-center')
+                    .addClass('times-up-message mt-6 text-center')
                     .html(`
-                        <i class="fas fa-clock text-danger mb-2" style="font-size: 2rem;"></i>
-                        <div class="h3 text-danger fw-bold mb-0">Time's up!</div>
+                        <i class="fas fa-clock text-red-600 mb-3 text-4xl"></i>
+                        <div class="text-2xl text-red-600 font-bold">Time's up!</div>
                     `)
             );
 
@@ -406,14 +406,14 @@ const GameUI = {
         $('#bestStreak').text(this.bestStreak);
         
         // Update result message
-        $('.card-body h2').html(`
+        $('.p-4.md\\:p-8 h2, .p-6 h2').html(`
             <div class="mb-2">${finalMessage.title}</div>
-            <div class="h5 text-muted fw-normal">${finalMessage.subtitle}</div>
+            <div class="text-lg text-gray-500 font-normal">${finalMessage.subtitle}</div>
         `);
         
-        $('#questionDisplay').addClass('d-none');
-        $('#scoreDisplay').addClass('d-none');
-        $('#finalResults').removeClass('d-none');
+        $('#questionDisplay').addClass('hidden');
+        $('#scoreDisplay').addClass('hidden');
+        $('#finalResults').removeClass('hidden');
 
         // First fade out BGM completely
         const fadeOut = setInterval(() => {
@@ -442,8 +442,8 @@ const GameUI = {
 
         // Update Play Again button to return to index
         $('#playAgain').off('click').on('click', () => {
-            $('#gameContainer').addClass('d-none');
-            $('.card.mb-4').removeClass('d-none');
+            $('#gameContainer').addClass('hidden');
+            $('.bg-white.rounded-lg.shadow-md.mb-6').removeClass('hidden');
             this.resetGame();
         });
     },

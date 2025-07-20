@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card border-0 shadow-sm rounded-3">
-            <div class="card-body p-4 p-md-5">
-                <h2 class="fw-bold text-center mb-4">Login</h2>
+<div class="flex justify-center">
+    <div class="w-full max-w-md">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
                 <form method="POST">
-                    <div class="mb-4">
-                        <label for="username" class="form-label text-muted fw-medium">Username</label>
-                        <input type="text" class="form-control form-control-lg bg-light border-0 shadow-sm" 
+                    <div class="mb-6">
+                        <label for="username" class="block text-gray-600 font-medium mb-2">Username</label>
+                        <input type="text" class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg shadow-sm text-lg" 
                                id="username" name="username" required>
                     </div>
-                    <div class="mb-4">
-                        <label for="password" class="form-label text-muted fw-medium">Password</label>
-                        <input type="password" class="form-control form-control-lg bg-light border-0 shadow-sm" 
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-600 font-medium mb-2">Password</label>
+                        <input type="password" class="w-full px-4 py-3 bg-gray-100 border-0 rounded-lg shadow-sm text-lg" 
                                id="password" name="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </button>
                 </form>
             </div>

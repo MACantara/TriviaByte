@@ -27,7 +27,7 @@ const QuizLogic = {
                 const response = await QuizAPI.generateQuiz(quizConfig);
                 this.currentQuiz = QuizAPI.parseQuizData(response);
                 QuizUI.displayQuiz(this.currentQuiz);
-                $('#quizContainer').removeClass('d-none');
+                $('#quizContainer').removeClass('hidden');
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error generating quiz. Please try again.');
@@ -45,7 +45,7 @@ const QuizLogic = {
             // Disable submit button and show loading state
             const $submitBtn = $('#submitQuiz');
             $submitBtn.prop('disabled', true)
-                     .html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...');
+                     .html('<span class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>Submitting...');
             
             // Gather and submit answers
             const answers = this.gatherAnswers();
@@ -54,7 +54,7 @@ const QuizLogic = {
                 alert("Please answer all questions before submitting.");
                 // Reset button state
                 $submitBtn.prop('disabled', false)
-                         .html('<i class="fas fa-check-circle me-2"></i>Submit Answers');
+                         .html('<i class="fas fa-check-circle mr-2"></i>Submit Answers');
                 return;
             }
             

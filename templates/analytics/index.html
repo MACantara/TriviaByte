@@ -1,68 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container mx-auto py-6">
     <!-- Summary Statistics Cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-primary text-white">
-                <div class="card-body">
-                    <h6 class="text-white-50">Total Questions Answered</h6>
-                    <h2 class="mb-0" id="totalAnswers">0</h2>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-blue-600 text-white rounded-lg shadow-md">
+            <div class="p-6">
+                <h6 class="text-blue-200 text-sm">Total Questions Answered</h6>
+                <h2 class="text-2xl font-bold" id="totalAnswers">0</h2>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-success text-white">
-                <div class="card-body">
-                    <h6 class="text-white-50">Average Accuracy</h6>
-                    <h2 class="mb-0" id="avgAccuracy">0%</h6>
-                </div>
+        <div class="bg-green-600 text-white rounded-lg shadow-md">
+            <div class="p-6">
+                <h6 class="text-green-200 text-sm">Average Accuracy</h6>
+                <h2 class="text-2xl font-bold" id="avgAccuracy">0%</h2>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-info text-white">
-                <div class="card-body">
-                    <h6 class="text-white-50">Avg Response Time</h6>
-                    <h2 class="mb-0" id="avgTime">0s</h2>
-                </div>
+        <div class="bg-blue-400 text-white rounded-lg shadow-md">
+            <div class="p-6">
+                <h6 class="text-blue-200 text-sm">Avg Response Time</h6>
+                <h2 class="text-2xl font-bold" id="avgTime">0s</h2>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-warning text-white">
-                <div class="card-body">
-                    <h6 class="text-white-50">Total Score</h6>
-                    <h2 class="mb-0" id="totalScore">0</h2>
-                </div>
+        <div class="bg-yellow-500 text-white rounded-lg shadow-md">
+            <div class="p-6">
+                <h6 class="text-yellow-200 text-sm">Total Score</h6>
+                <h2 class="text-2xl font-bold" id="totalScore">0</h2>
             </div>
         </div>
     </div>
 
     <!-- Time Analysis -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Response Time Distribution</h5>
-                    <canvas id="timeChart"></canvas>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6">
+                <h5 class="text-lg font-bold mb-4">Response Time Distribution</h5>
+                <canvas id="timeChart"></canvas>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Accuracy by Time Taken</h5>
-                    <canvas id="accuracyTimeChart"></canvas>
-                </div>
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6">
+                <h5 class="text-lg font-bold mb-4">Accuracy by Time Taken</h5>
+                <canvas id="accuracyTimeChart"></canvas>
             </div>
         </div>
     </div>
 
     <!-- Existing Analytics Table Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Detailed Question Analysis</h2>
-        <div class="d-flex gap-2">
-            <select id="sortBy" class="form-select">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Detailed Question Analysis</h2>
+        <div class="flex gap-2">
+            <select id="sortBy" class="px-4 py-2 border border-gray-300 rounded-lg">
                 <option value="accuracy">Sort by Accuracy</option>
                 <option value="total_score">Sort by Total Score</option>
                 <option value="avg_time_taken">Sort by Average Time</option>
@@ -70,42 +58,40 @@
                 <option value="difficulty">Sort by Difficulty</option>
                 <option value="engagement">Sort by Engagement Rate</option>
             </select>
-            <button id="refreshData" class="btn btn-primary">
+            <button id="refreshData" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 <i class="fas fa-sync-alt"></i>
             </button>
         </div>
     </div>
 
     <!-- Enhanced Analytics Table -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
-            <div id="loadingState" class="text-center py-5 d-none">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <div class="mt-3 text-muted">Loading analytics data...</div>
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="p-6">
+            <div id="loadingState" class="text-center py-8 hidden">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div class="mt-3 text-gray-500">Loading analytics data...</div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover" id="analyticsTable">
-                    <thead class="table-light">
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto" id="analyticsTable">
+                    <thead class="bg-gray-100">
                         <tr>
-                            <th>Question</th>
-                            <th class="text-center">Correct</th>
-                            <th class="text-center">Wrong</th>
-                            <th class="text-center">Avg Time</th>
-                            <th class="text-center">Score</th>
-                            <th class="text-center">Accuracy</th>
-                            <th class="text-center">
-                                <div class="d-flex align-items-center justify-content-center gap-1">
+                            <th class="px-4 py-3 text-left">Question</th>
+                            <th class="px-4 py-3 text-center">Correct</th>
+                            <th class="px-4 py-3 text-center">Wrong</th>
+                            <th class="px-4 py-3 text-center">Avg Time</th>
+                            <th class="px-4 py-3 text-center">Score</th>
+                            <th class="px-4 py-3 text-center">Accuracy</th>
+                            <th class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-1">
                                     Difficulty
-                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Percentage of wrong answers - higher means more challenging"></i>
+                                    <i class="fas fa-info-circle cursor-pointer" title="Percentage of wrong answers - higher means more challenging"></i>
                                 </div>
                             </th>
-                            <th class="text-center">
-                                <div class="d-flex align-items-center justify-content-center gap-1">
+                            <th class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-1">
                                     Engagement
-                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="How often this question is attempted compared to others"></i>
+                                    <i class="fas fa-info-circle cursor-pointer" title="How often this question is attempted compared to others"></i>
                                 </div>
                             </th>
                         </tr>
@@ -114,9 +100,9 @@
                 </table>
             </div>
 
-            <div id="noDataMessage" class="text-center py-5 text-muted d-none">
-                <i class="fas fa-chart-bar fa-3x mb-3"></i>
-                <p class="mb-0">No analytics data available yet.</p>
+            <div id="noDataMessage" class="text-center py-8 text-gray-500 hidden">
+                <i class="fas fa-chart-bar text-4xl mb-4"></i>
+                <p>No analytics data available yet.</p>
             </div>
         </div>
     </div>
@@ -132,24 +118,24 @@ let accuracyChart = null;
 
 async function loadAnalyticsData() {
     try {
-        $('#loadingState').removeClass('d-none');
-        $('#analyticsTable, #noDataMessage').addClass('d-none');
+        $('#loadingState').removeClass('hidden');
+        $('#analyticsTable, #noDataMessage').addClass('hidden');
         
         const response = await fetch('/analytics/api/questions');
         analyticsData = await response.json();
         
         if (analyticsData.length === 0) {
-            $('#noDataMessage').removeClass('d-none');
+            $('#noDataMessage').removeClass('hidden');
             return;
         }
 
         displayData(analyticsData);
-        $('#analyticsTable').removeClass('d-none');
+        $('#analyticsTable').removeClass('hidden');
     } catch (error) {
         console.error('Error loading analytics:', error);
         alert('Error loading analytics data. Please try again.');
     } finally {
-        $('#loadingState').addClass('d-none');
+        $('#loadingState').addClass('hidden');
     }
 }
 
@@ -179,23 +165,22 @@ function displayData(data) {
         const difficulty = (100 - item.accuracy).toFixed(1);
         
         tbody.innerHTML += `
-            <tr>
-                <td>${item.question}</td>
-                <td class="text-center text-success fw-bold">${item.correct_answers}</td>
-                <td class="text-center text-danger fw-bold">${item.wrong_answers}</td>
-                <td class="text-center">${item.avg_time_taken.toFixed(1)}s</td>
-                <td class="text-center">${item.total_score.toLocaleString()}</td>
-                <td class="text-center">
-                    <div class="progress" style="height: 20px;">
-                        <div class="progress-bar ${getAccuracyClass(item.accuracy)}" 
-                             role="progressbar" 
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">${item.question}</td>
+                <td class="px-4 py-3 text-center text-green-600 font-bold">${item.correct_answers}</td>
+                <td class="px-4 py-3 text-center text-red-600 font-bold">${item.wrong_answers}</td>
+                <td class="px-4 py-3 text-center">${item.avg_time_taken.toFixed(1)}s</td>
+                <td class="px-4 py-3 text-center">${item.total_score.toLocaleString()}</td>
+                <td class="px-4 py-3 text-center">
+                    <div class="w-full bg-gray-200 rounded-full h-5">
+                        <div class="${getAccuracyClass(item.accuracy)} h-5 rounded-full flex items-center justify-center text-white text-sm font-medium" 
                              style="width: ${item.accuracy}%">
                             ${item.accuracy}%
                         </div>
                     </div>
                 </td>
-                <td class="text-center">${difficulty}%</td>
-                <td class="text-center">${engagement}%</td>
+                <td class="px-4 py-3 text-center">${difficulty}%</td>
+                <td class="px-4 py-3 text-center">${engagement}%</td>
             </tr>
         `;
     });
@@ -206,10 +191,10 @@ function displayData(data) {
 }
 
 function getAccuracyClass(accuracy) {
-    if (accuracy >= 80) return 'bg-success';
-    if (accuracy >= 60) return 'bg-info';
-    if (accuracy >= 40) return 'bg-warning';
-    return 'bg-danger';
+    if (accuracy >= 80) return 'bg-green-500';
+    if (accuracy >= 60) return 'bg-blue-500';
+    if (accuracy >= 40) return 'bg-yellow-500';
+    return 'bg-red-500';
 }
 
 function sortData(field) {
@@ -322,11 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#sortBy').on('change', (e) => sortData(e.target.value));
     $('#refreshData').on('click', loadAnalyticsData);
 
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    // Initialize tooltips would be handled by a tooltip library if needed
+    // For now, we're using basic title attributes
 });
 </script>
 {% endblock %}

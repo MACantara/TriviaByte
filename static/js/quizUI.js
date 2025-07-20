@@ -13,9 +13,9 @@ const QuizUI = {
 
     // Show loading state
     showLoading: function() {
-        $('#quizContainer').addClass('d-none');
+        $('#quizContainer').addClass('hidden');
         $('button[type="submit"]').prop('disabled', true).html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...'
+            '<span class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span> Generating...'
         );
     },
 
@@ -27,12 +27,12 @@ const QuizUI = {
     // Display multiple choice question
     displayMultipleChoice: function(question, index, questionBody) {
         const shuffledOptions = this.shuffleArray(question.options);
-        const mcOptions = $('<div>').addClass('d-grid gap-3');
+        const mcOptions = $('<div>').addClass('space-y-3');
         shuffledOptions.forEach((option, optionIndex) => {
             mcOptions.append(`
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
-                    <label class="form-check-label py-2 px-3 bg-light rounded-3 w-100 fw-medium" for="q${index}_${optionIndex}">${option}</label>
+                <div class="flex items-center">
+                    <input class="mr-3 text-blue-600" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
+                    <label class="flex-1 py-3 px-4 bg-gray-100 rounded-lg font-medium cursor-pointer hover:bg-gray-200 transition-colors" for="q${index}_${optionIndex}">${option}</label>
                 </div>
             `);
         });
@@ -45,22 +45,22 @@ const QuizUI = {
         questionsContainer.empty();
 
         quiz.questions.forEach((question, index) => {
-            const questionDiv = $('<div>').addClass('card border-0 shadow-sm rounded-3 mb-4');
-            const questionBody = $('<div>').addClass('card-body p-4');
+            const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow-sm mb-6');
+            const questionBody = $('<div>').addClass('p-6');
             
             // Add question header with save button
-            const headerDiv = $('<div>').addClass('d-flex justify-content-between align-items-center mb-4');
+            const headerDiv = $('<div>').addClass('flex justify-between items-center mb-6');
             headerDiv.append(
-                $('<h5>').addClass('fw-bold mb-0').text(`Question ${index + 1}`),
+                $('<h5>').addClass('text-lg font-bold').text(`Question ${index + 1}`),
                 $('<button>')
-                    .addClass('btn btn-outline-primary shadow-sm')
+                    .addClass('bg-blue-100 text-blue-600 px-4 py-2 rounded-lg shadow-sm hover:bg-blue-200 transition-colors')
                     .attr('data-question-index', index)
-                    .html('<i class="fas fa-save me-2"></i>Save')
+                    .html('<i class="fas fa-save mr-2"></i>Save')
                     .on('click', () => this.handleSaveQuestion(question))
             );
             questionBody.append(headerDiv);
             
-            questionBody.append($('<p>').addClass('card-text mb-4').text(question.question));
+            questionBody.append($('<p>').addClass('text-gray-800 mb-6').text(question.question));
             this.displayMultipleChoice(question, index, questionBody);
 
             questionDiv.append(questionBody);
@@ -69,8 +69,8 @@ const QuizUI = {
 
         // Add submit button
         questionsContainer.append(`
-            <button id="submitQuiz" class="btn btn-primary btn-lg w-100 shadow-sm">
-                <i class="fas fa-check-circle me-2"></i>Submit Answers
+            <button id="submitQuiz" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
+                <i class="fas fa-check-circle mr-2"></i>Submit Answers
             </button>
         `);
     },
@@ -97,36 +97,36 @@ const QuizUI = {
         const correctCount = answers.filter(a => a.isCorrect).length;
         const score = Math.round((correctCount / answers.length) * 100);
         questionsContainer.prepend(`
-            <div class="card border-0 shadow-sm rounded-3 mb-4">
-                <div class="card-body p-4 text-center">
-                    <h3 class="fw-bold mb-3">Quiz Results</h3>
-                    <div class="display-4 text-primary fw-bold mb-2">${score}%</div>
-                    <div class="text-muted">${correctCount} out of ${answers.length} correct</div>
+            <div class="bg-white rounded-lg shadow-sm mb-6">
+                <div class="p-6 text-center">
+                    <h3 class="text-2xl font-bold mb-4">Quiz Results</h3>
+                    <div class="text-5xl text-blue-600 font-bold mb-2">${score}%</div>
+                    <div class="text-gray-600">${correctCount} out of ${answers.length} correct</div>
                 </div>
             </div>
         `);
 
         // Display each question with results
         answers.forEach((answer, index) => {
-            const questionDiv = $('<div>').addClass('card mb-3');
-            const questionBody = $('<div>').addClass('card-body');
+            const questionDiv = $('<div>').addClass('bg-white rounded-lg shadow-sm mb-4');
+            const questionBody = $('<div>').addClass('p-6');
             
             // Question header with badge
             const badge = $('<span>')
-                .addClass(`badge ${answer.isCorrect ? 'bg-success' : 'bg-danger'} ms-2`)
+                .addClass(`inline-block px-3 py-1 rounded-full text-sm font-medium ${answer.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`)
                 .text(answer.isCorrect ? 'Correct' : 'Incorrect');
             
             questionBody.append(
                 $('<div>')
-                    .addClass('d-flex justify-content-between align-items-center mb-3')
+                    .addClass('flex justify-between items-center mb-4')
                     .append(
-                        $('<h5>').addClass('card-title mb-0').text(`Question ${index + 1}`),
+                        $('<h5>').addClass('text-lg font-bold').text(`Question ${index + 1}`),
                         badge
                     )
             );
 
             // Question text
-            questionBody.append($('<p>').addClass('card-text mb-3').text(answer.questionText));
+            questionBody.append($('<p>').addClass('text-gray-800 mb-4').text(answer.questionText));
 
             // Display answer options based on question type
             this.displayResultAnswers(answer, questionBody);
@@ -138,21 +138,21 @@ const QuizUI = {
         // Add restart button
         questionsContainer.append(
             $('<button>')
-                .addClass('btn btn-primary btn-lg w-100 mt-4 shadow-sm')
-                .html('<i class="fas fa-redo me-2"></i>Start New Quiz')
+                .addClass('w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors mt-6')
+                .html('<i class="fas fa-redo mr-2"></i>Start New Quiz')
                 .on('click', () => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     setTimeout(() => {
                         $('#quizForm').trigger('reset');
-                        $('#quizContainer').addClass('d-none');
-                        $('.card.mb-4').removeClass('d-none');
+                        $('#quizContainer').addClass('hidden');
+                        $('.bg-white.rounded-lg.shadow-md.mb-6').removeClass('hidden');
                     }, 300);
                 })
         );
     },
 
     displayResultAnswers: function(answer, container) {
-        const answersSection = $('<div>').addClass('mb-3');
+        const answersSection = $('<div>').addClass('mb-4');
         this.displayMCResult(answer, answersSection);
         container.append(answersSection);
     },
@@ -164,27 +164,32 @@ const QuizUI = {
             const isUserAnswer = String(answer.userAnswer).toLowerCase() === String(option).toLowerCase();
             const isCorrectAnswer = String(answer.correctAnswer).toLowerCase() === String(option).toLowerCase();
             
-            const optionDiv = $('<div>')
-                .addClass('form-check mb-2 p-2 rounded')
-                .toggleClass('bg-success bg-opacity-10', isCorrectAnswer)
-                .toggleClass('border border-2', isUserAnswer)
-                .toggleClass('border-success', isUserAnswer && isCorrectAnswer)
-                .toggleClass('border-danger', isUserAnswer && !isCorrectAnswer);
+            let optionClasses = 'flex items-center mb-2 p-3 rounded-lg';
+            
+            if (isCorrectAnswer) {
+                optionClasses += ' bg-green-50';
+            }
+            
+            if (isUserAnswer) {
+                optionClasses += isCorrectAnswer ? ' border-2 border-green-500' : ' border-2 border-red-500';
+            }
+            
+            const optionDiv = $('<div>').addClass(optionClasses);
             
             optionDiv.append(
-                $('<div>').addClass('d-flex align-items-center').append(
+                $('<div>').addClass('flex items-center flex-1').append(
                     $('<input>')
-                        .addClass('form-check-input me-2')
+                        .addClass('mr-3 text-blue-600')
                         .attr({
                             type: 'radio',
                             disabled: true,
                             checked: isUserAnswer
                         }),
                     $('<label>')
-                        .addClass('form-check-label flex-grow')
+                        .addClass('flex-1 cursor-default')
                         .text(option),
                     isUserAnswer && $('<i>')
-                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-success' : 'times text-danger'} ms-2`)
+                        .addClass(`fas fa-${isCorrectAnswer ? 'check text-green-600' : 'times text-red-600'} ml-2`)
                 )
             );
             
