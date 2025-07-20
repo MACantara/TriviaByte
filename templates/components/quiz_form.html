@@ -23,10 +23,10 @@
                         {% for level in difficulty_levels %}
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center">
-                                <input class="mr-2 text-blue-600" type="radio" name="difficulty" 
+                                <input class="mr-2 text-blue-600 cursor-pointer" type="radio" name="difficulty" 
                                        value="{{ level.value }}" id="{{ level.id }}" 
                                        {% if level.value == 'medium' %}checked{% endif %}>
-                                <label class="font-medium" for="{{ level.id }}">
+                                <label class="font-medium cursor-pointer" for="{{ level.id }}">
                                     {{ level.label }}
                                 </label>
                             </div>
@@ -41,9 +41,9 @@
                 <div class="bg-gray-100 rounded-lg p-4">
                     {% for type in question_types %}
                     <div class="flex items-center mb-2">
-                        <input class="mr-2 text-blue-600" type="checkbox" value="{{ type.value }}" 
+                        <input class="mr-2 text-blue-600 cursor-pointer" type="checkbox" value="{{ type.value }}" 
                                id="{{ type.id }}" checked>
-                        <label class="font-medium" for="{{ type.id }}">
+                        <label class="font-medium cursor-pointer" for="{{ type.id }}">
                             {{ type.label }}
                         </label>
                     </div>
@@ -51,14 +51,14 @@
                 </div>
             </div>
             <div class="space-y-3">
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer">
                     <i class="bi bi-magic mr-2"></i>Generate Quiz
                 </button>
             </div>
         </form>
         {% else %}
         <div class="text-center space-y-3">
-            <a href="/play" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
+            <a href="/play" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer">
                 <i class="bi bi-play-fill mr-2"></i>Play Game
             </a>
         </div>

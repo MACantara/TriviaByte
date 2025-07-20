@@ -195,7 +195,7 @@ const GameUI = {
                 .addClass('answer-container')
                 .append(
                     $('<button>')
-                        .addClass('w-full py-4 px-6 text-white font-bold text-lg rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 answer-btn')
+                        .addClass('w-full py-4 px-6 text-white font-bold text-lg rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 answer-btn cursor-pointer')
                         .css('background-color', this.colors[index])
                         .css('transform', 'scale(0)')
                         .text(option)

@@ -32,7 +32,7 @@ const QuizUI = {
         shuffledOptions.forEach((option, optionIndex) => {
             mcOptions.append(`
                 <div class="flex items-center">
-                    <input class="mr-3 text-blue-600" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
+                    <input class="mr-3 text-blue-600 cursor-pointer" type="radio" name="q${index}" id="q${index}_${optionIndex}" value="${option}">
                     <label class="flex-1 py-3 px-4 bg-gray-100 rounded-lg font-medium cursor-pointer hover:bg-gray-200 transition-colors" for="q${index}_${optionIndex}">${option}</label>
                 </div>
             `);
@@ -57,7 +57,7 @@ const QuizUI = {
             headerDiv.append(
                 $('<h5>').addClass('text-lg font-bold').text(`Question ${index + 1}`),
                 $('<button>')
-                    .addClass('bg-blue-100 text-blue-600 px-4 py-2 rounded-lg shadow-sm hover:bg-blue-200 transition-colors')
+                    .addClass('bg-blue-100 text-blue-600 px-4 py-2 rounded-lg shadow-sm hover:bg-blue-200 transition-colors cursor-pointer')
                     .attr('data-question-index', index)
                     .html('<i class="bi bi-save mr-2"></i>Save')
                     .on('click', () => this.handleSaveQuestion(question))
@@ -73,7 +73,7 @@ const QuizUI = {
 
         // Add submit button
         questionsContainer.append(`
-            <button id="submitQuiz" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
+            <button id="submitQuiz" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer">
                 <i class="bi bi-check-circle mr-2"></i>Submit Answers
             </button>
         `);
@@ -188,7 +188,7 @@ const QuizUI = {
         // Add restart button
         questionsContainer.append(
             $('<button>')
-                .addClass('w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors mt-6')
+                .addClass('w-full bg-blue-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors mt-6 cursor-pointer')
                 .html('<i class="bi bi-arrow-clockwise mr-2"></i>Start New Quiz')
                 .on('click', () => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
