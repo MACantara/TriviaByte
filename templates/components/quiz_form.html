@@ -17,6 +17,26 @@
                 <div class="text-sm text-gray-500 mt-1">Enter the number of questions you want</div>
             </div>
             <div class="mb-6">
+                <label class="block text-gray-600 font-medium mb-2">Difficulty Level</label>
+                <div class="bg-gray-100 rounded-lg p-4">
+                    {% if difficulty_levels %}
+                        {% for level in difficulty_levels %}
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <input class="mr-2 text-blue-600" type="radio" name="difficulty" 
+                                       value="{{ level.value }}" id="{{ level.id }}" 
+                                       {% if level.value == 'medium' %}checked{% endif %}>
+                                <label class="font-medium" for="{{ level.id }}">
+                                    {{ level.label }}
+                                </label>
+                            </div>
+                            <span class="text-sm text-gray-600 font-medium">Prize: {{ level.prize }}</span>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="mb-6">
                 <label class="block text-gray-600 font-medium mb-2">Question Types</label>
                 <div class="bg-gray-100 rounded-lg p-4">
                     {% for type in question_types %}
@@ -40,9 +60,12 @@
             </div>
         </form>
         {% else %}
-        <div class="text-center">
-            <button type="button" id="randomQuiz" class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
-                <i class="bi bi-shuffle mr-2"></i>Try Random Questions
+        <div class="text-center space-y-3">
+            <a href="/play" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-sm text-lg font-medium hover:bg-blue-700 transition-colors">
+                <i class="bi bi-play-fill mr-2"></i>Play Game
+            </a>
+            <button type="button" id="randomQuiz" class="w-full bg-gray-600 text-white py-3 px-6 rounded-lg shadow-sm text-lg font-medium hover:bg-gray-700 transition-colors">
+                <i class="bi bi-shuffle mr-2"></i>Quick Random Questions
             </button>
         </div>
         {% endif %}
