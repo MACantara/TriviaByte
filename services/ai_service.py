@@ -61,7 +61,7 @@ class AIService:
 
             logger.debug("Generating content with Gemini API")
             response = self.client.models.generate_content(
-                model='gemini-2.0-flash-exp',
+                model='gemini-2.5-flash',
                 contents=enhanced_prompt,
                 config=GenerateContentConfig(
                     **self.base_config
@@ -148,7 +148,7 @@ Requirements:
 - Explain core concepts clearly"""
             
             response = self.client.models.generate_content(
-                model='gemini-2.0-flash-exp',
+                model='gemini-2.5-flash',
                 contents=explanation_prompt,
                 config=GenerateContentConfig(**self.base_config)
             )
