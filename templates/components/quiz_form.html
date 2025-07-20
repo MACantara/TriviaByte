@@ -4,6 +4,16 @@
             <i class="bi bi-book-half mr-2"></i>TriviaByte
         </h1>
         {% if is_admin %}
+        <!-- Game Rules for Admin -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h3 class="text-sm font-bold text-blue-800 mb-2">
+                <i class="bi bi-info-circle mr-2"></i>Game Rules Reminder
+            </h3>
+            <ul class="space-y-1 text-sm text-blue-700">
+                <li><i class="bi bi-trophy text-yellow-500 mr-1"></i>3+ correct answers = Prize winner</li>
+                <li><i class="bi bi-person-check text-green-500 mr-1"></i>One try per person only</li>
+            </ul>
+        </div>
         <form id="quizForm">
             <div class="mb-6">
                 <label for="topic" class="block text-gray-600 font-medium mb-2">Quiz Topic</label>

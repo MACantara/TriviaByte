@@ -3,7 +3,24 @@
         <h1 class="text-2xl font-bold text-center mb-2">
             <i class="bi bi-book-half mr-2"></i>TriviaByte
         </h1>
-        <p class="text-center text-gray-600 mb-8">Choose your difficulty level and win amazing prizes!</p>
+        <p class="text-center text-gray-600 mb-6">Choose your difficulty level and win amazing prizes!</p>
+        
+        <!-- Game Rules -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+            <h3 class="text-lg font-bold text-blue-800 mb-3">
+                <i class="bi bi-info-circle mr-2"></i>Game Rules
+            </h3>
+            <ul class="space-y-2 text-blue-700">
+                <li class="flex items-center">
+                    <i class="bi bi-trophy text-yellow-500 mr-2"></i>
+                    Score at least 3 out of 5 questions correct to win a prize
+                </li>
+                <li class="flex items-center">
+                    <i class="bi bi-person-check text-green-500 mr-2"></i>
+                    One try per person - For retries, please line up again
+                </li>
+            </ul>
+        </div>
         
         <div class="space-y-4">
             {% if difficulty_levels %}

@@ -446,10 +446,20 @@ const GameUI = {
         $('#correctAnswers').text(this.correctAnswers);
         $('#bestStreak').text(this.bestStreak);
         
+        // Add prize eligibility and one-try rule messaging
+        const prizeEligible = this.correctAnswers >= 3;
+        const prizeMessage = prizeEligible 
+            ? '<div class="text-green-600 font-bold mb-2"><i class="bi bi-trophy mr-2"></i>Congratulations! You won a prize!</div>'
+            : '<div class="text-orange-600 font-bold mb-2"><i class="bi bi-info-circle mr-2"></i>Score 3+ to win a prize</div>';
+        
+        const oneTrieRule = '<div class="text-blue-600 text-sm mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200"><i class="bi bi-info-circle mr-2"></i><strong>Remember:</strong> One try per person. For another attempt, please line up again.</div>';
+        
         // Update result message
         $('.p-4.md\\:p-8 h2, .p-6 h2').html(`
             <div class="mb-2">${finalMessage.title}</div>
-            <div class="text-lg text-gray-500 font-normal">${finalMessage.subtitle}</div>
+            <div class="text-lg text-gray-500 font-normal mb-4">${finalMessage.subtitle}</div>
+            ${prizeMessage}
+            ${oneTrieRule}
         `);
         
         $('#questionDisplay').addClass('hidden');
@@ -490,34 +500,34 @@ const GameUI = {
     getFinalMessage: function(correctCount) {
         const messages = {
             0: [
-                { title: 'Game Over!', subtitle: 'Ready to try again? You got this! 🎮' },
-                { title: 'Oops!', subtitle: 'Everyone starts somewhere. Keep going! 🌟' },
-                { title: 'Not Quite There!', subtitle: 'Practice makes perfect! 💪' }
+                { title: 'Game Over!', subtitle: 'Better luck next time! Remember: 3+ correct wins a prize! 🎮' },
+                { title: 'Oops!', subtitle: 'Everyone starts somewhere. Need 3+ correct for a prize! 🌟' },
+                { title: 'Not Quite There!', subtitle: 'Practice makes perfect! Score 3+ to win! 💪' }
             ],
             1: [
-                { title: 'Nice Try!', subtitle: 'One step at a time! 🎯' },
-                { title: 'Getting Started!', subtitle: 'Room for improvement! 📈' },
-                { title: 'Keep Going!', subtitle: 'You\'re on your way up! 🔝' }
+                { title: 'Good Start!', subtitle: 'You got 1 right! Need 3+ correct to win a prize! 🎯' },
+                { title: 'Getting There!', subtitle: 'One correct answer! Score 3+ for a prize! 📈' },
+                { title: 'Keep Trying!', subtitle: 'Nice effort! Need 3+ correct to win! 🔝' }
             ],
             2: [
-                { title: 'Almost There!', subtitle: 'So close to winning a prize! 🎲' },
-                { title: 'Not Bad!', subtitle: 'Just a bit more practice! 🎯' },
-                { title: 'Good Effort!', subtitle: 'You\'re getting better! 📈' }
+                { title: 'Almost There!', subtitle: 'So close! Just need 1 more correct for a prize! 🎲' },
+                { title: 'Great Effort!', subtitle: 'Two correct! One more needed for a prize! 🎯' },
+                { title: 'Getting Better!', subtitle: 'Nice progress! Score 3+ to win a prize! 📈' }
             ],
             3: [
-                { title: 'Good Job!', subtitle: 'You won a Prize! 🥇' },
-                { title: 'Well Done!', subtitle: 'Bronze achievement unlocked! 🌟' },
-                { title: 'Nice Work!', subtitle: 'You earned bronze! Keep it up! ⭐' }
+                { title: 'Congratulations!', subtitle: 'You Won a Prize! 3 correct answers! 🥇' },
+                { title: 'Well Done!', subtitle: 'Prize Winner! Great job getting 3 right! 🌟' },
+                { title: 'Excellent!', subtitle: 'You earned a prize with 3 correct! ⭐' }
             ],
             4: [
-                { title: 'Excellent!', subtitle: 'You won a Prize! 🥈' },
-                { title: 'Impressive!', subtitle: 'Silver achievement unlocked! ✨' },
-                { title: 'Outstanding!', subtitle: 'Silver rank achieved! 🌟' }
+                { title: 'Outstanding!', subtitle: 'You Won a Prize! 4 correct answers! 🥈' },
+                { title: 'Impressive!', subtitle: 'Prize Winner! Amazing 4 out of 5! ✨' },
+                { title: 'Fantastic!', subtitle: 'Excellent performance! You won a prize! 🌟' }
             ],
             5: [
-                { title: 'Perfect Score!', subtitle: 'You won a Prize! 🥇' },
-                { title: 'Spectacular!', subtitle: 'Gold achievement unlocked! 🏆' },
-                { title: 'Amazing!', subtitle: 'You\'re a trivia master! 👑' }
+                { title: 'Perfect Score!', subtitle: 'You Won a Prize! All 5 correct! 🥇' },
+                { title: 'Spectacular!', subtitle: 'Prize Winner! Perfect game! 🏆' },
+                { title: 'Amazing!', subtitle: 'Flawless victory! You won the top prize! 👑' }
             ]
         };
 

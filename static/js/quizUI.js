@@ -146,12 +146,22 @@ const QuizUI = {
         // Add score summary at the top
         const correctCount = answers.filter(a => a.isCorrect).length;
         const score = Math.round((correctCount / answers.length) * 100);
+        const prizeEligible = correctCount >= 3;
+        
+        const prizeStatusHtml = prizeEligible 
+            ? '<div class="text-green-600 font-bold text-lg mb-2"><i class="bi bi-trophy mr-2"></i>Prize Winner!</div>'
+            : '<div class="text-orange-600 font-bold text-lg mb-2"><i class="bi bi-info-circle mr-2"></i>Need 3+ correct for prize</div>';
+        
         questionsContainer.prepend(`
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6 text-center">
                     <h3 class="text-2xl font-bold mb-4">Quiz Results</h3>
                     <div class="text-5xl text-blue-600 font-bold mb-2">${score}%</div>
-                    <div class="text-gray-600">${correctCount} out of ${answers.length} correct</div>
+                    <div class="text-gray-600 mb-3">${correctCount} out of ${answers.length} correct</div>
+                    ${prizeStatusHtml}
+                    <div class="text-sm text-blue-600 mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <i class="bi bi-info-circle mr-2"></i><strong>Remember:</strong> One try per person. For another attempt, please line up again.
+                    </div>
                 </div>
             </div>
         `);
