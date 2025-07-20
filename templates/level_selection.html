@@ -20,23 +20,19 @@
 
 {% block extra_js %}
 <script>
-// Debug GameUI availability
-console.log('Level selection page loaded');
-console.log('GameUI available:', typeof window.GameUI);
-console.log('GameUI.startGame available:', typeof window.GameUI?.startGame);
-
-// Initialize GameUI if needed
+// Simple debug to verify all modules are loaded
 $(document).ready(function() {
-    console.log('Document ready - GameUI:', typeof window.GameUI);
+    console.log('Level selection page ready');
+    console.log('Available modules:');
+    console.log('- QuizLogic:', typeof window.QuizLogic);
+    console.log('- GameUI:', typeof window.GameUI);  
+    console.log('- QuizAPI:', typeof window.QuizAPI);
     
-    // Try to initialize GameUI if it exists but isn't ready
-    if (window.GameUI && typeof window.GameUI.initBgm === 'function') {
-        try {
-            // GameUI.initBgm();
-            console.log('GameUI initialized successfully');
-        } catch(e) {
-            console.log('GameUI initialization error:', e);
-        }
+    // Check if the startQuizWithDifficulty function is available
+    if (window.QuizLogic && typeof window.QuizLogic.startQuizWithDifficulty === 'function') {
+        console.log('✅ QuizLogic.startQuizWithDifficulty is ready');
+    } else {
+        console.error('❌ QuizLogic.startQuizWithDifficulty not available');
     }
 });
 </script>

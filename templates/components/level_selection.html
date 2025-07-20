@@ -64,10 +64,20 @@
 <script>
 // Wait for DOM and all scripts to be ready
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Level selection DOM loaded');
+    
     const levelCards = document.querySelectorAll('.level-card');
     const startButton = document.getElementById('startSelectedLevel');
     let selectedDifficulty = null;
     let selectedPrize = null;
+
+    // Debug: Check if required modules are available
+    setTimeout(() => {
+        console.log('QuizLogic available:', typeof window.QuizLogic);
+        console.log('QuizLogic.startQuizWithDifficulty available:', typeof window.QuizLogic?.startQuizWithDifficulty);
+        console.log('GameUI available:', typeof window.GameUI);
+        console.log('QuizAPI available:', typeof window.QuizAPI);
+    }, 100);
 
     levelCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -88,34 +98,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     startButton.addEventListener('click', function() {
         if (selectedDifficulty) {
+            console.log('Start button clicked, difficulty:', selectedDifficulty);
+            
             // Store selected difficulty and prize in sessionStorage
             sessionStorage.setItem('selectedDifficulty', selectedDifficulty);
             sessionStorage.setItem('selectedPrize', selectedPrize);
             
-            // Start the game with selected difficulty
+            // Start the game with selected difficulty using existing QuizLogic
             startRandomQuiz(selectedDifficulty);
         }
     });
 });
-
-function waitForGameUI(callback, maxAttempts = 50) {
-    let attempts = 0;
-    
-    function checkGameUI() {
-        attempts++;
-        
-        if (window.GameUI && typeof window.GameUI.startGame === 'function') {
-            callback(true);
-        } else if (attempts < maxAttempts) {
-            setTimeout(checkGameUI, 100); // Wait 100ms and try again
-        } else {
-            console.error('GameUI failed to load after', maxAttempts * 100, 'ms');
-            callback(false);
-        }
-    }
-    
-    checkGameUI();
-}
 
 function startRandomQuiz(difficulty = 'medium') {
     console.log('Starting quiz with difficulty:', difficulty);
@@ -132,57 +125,42 @@ function startRandomQuiz(difficulty = 'medium') {
         startButton.disabled = true;
     }
     
-    // Fetch questions from API
-    fetch(`/random-questions?difficulty=${difficulty}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success' && data.questions.length > 0) {
-                console.log('Questions loaded:', data.questions.length);
-                
-                // Wait for GameUI to be available
-                waitForGameUI((gameUIReady) => {
-                    if (gameUIReady) {
-                        console.log('GameUI is ready, starting game');
-                        
-                        // Hide level selection
-                        const levelContainer = document.querySelector('.level-card').closest('.bg-white');
-                        if (levelContainer) {
-                            levelContainer.style.display = 'none';
-                        }
-                        
-                        // Start the game
-                        window.GameUI.startGame(data.questions);
-                    } else {
-                        console.error('GameUI not available after waiting');
-                        alert('Game interface failed to load. Please refresh the page and try again.');
-                        
-                        // Reset button
-                        if (startButton) {
-                            startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
-                            startButton.disabled = false;
-                        }
-                    }
-                });
-            } else {
-                alert('No questions available for this difficulty level. Please try again later.');
-                
-                // Reset button
-                if (startButton) {
-                    startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
-                    startButton.disabled = false;
+    // Use the existing QuizLogic.startQuizWithDifficulty function - it's already proven to work!
+    if (window.QuizLogic && typeof window.QuizLogic.startQuizWithDifficulty === 'function') {
+        console.log('Using existing QuizLogic.startQuizWithDifficulty');
+        
+        QuizLogic.startQuizWithDifficulty(difficulty).then(success => {
+            if (success) {
+                console.log('Quiz started successfully via QuizLogic');
+                // Hide level selection
+                const levelContainer = document.querySelector('.level-card').closest('.bg-white');
+                if (levelContainer) {
+                    levelContainer.style.display = 'none';
                 }
+            } else {
+                console.error('Quiz failed to start via QuizLogic');
+                alert('No questions available for this difficulty level.');
             }
-        })
-        .catch(error => {
-            console.error('Error fetching questions:', error);
-            alert('Failed to load questions. Please check your connection and try again.');
-            
-            // Reset button
+        }).catch(error => {
+            console.error('Error with QuizLogic.startQuizWithDifficulty:', error);
+            alert('Error loading questions. Please try again.');
+        }).finally(() => {
+            // Reset button in all cases
             if (startButton) {
                 startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
                 startButton.disabled = false;
             }
         });
+    } else {
+        console.error('QuizLogic.startQuizWithDifficulty not available');
+        alert('Game logic not loaded. Please refresh the page and try again.');
+        
+        // Reset button
+        if (startButton) {
+            startButton.innerHTML = '<i class="bi bi-play-fill mr-2"></i>Start Game';
+            startButton.disabled = false;
+        }
+    }
 }
 
 // Make the function globally available
