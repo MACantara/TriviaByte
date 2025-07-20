@@ -27,6 +27,17 @@ const GameUI = {
     countdownDuration: 5000, // 5 seconds in milliseconds
     countdownTimeout: null,
 
+    // Get timer duration based on difficulty level
+    getTimerDuration: function() {
+        const difficulty = sessionStorage.getItem('selectedDifficulty') || 'medium';
+        const timerMap = {
+            'easy': 30,
+            'medium': 45,
+            'hard': 60
+        };
+        return timerMap[difficulty] || 45; // Default to medium (45 seconds)
+    },
+
     // Initialize BGM settings
     initBgm: function() {
         this.bgm.loop = true;
@@ -146,7 +157,7 @@ const GameUI = {
         $('#currentStreak').text('0');
         $('#currentQuestionNum').text('1');
         $('#timerProgress').css('width', '100%');
-        $('#timer').text('30');  // Changed from 20 to 30
+        $('#timer').text(this.getTimerDuration());  // Use dynamic timer duration
         $('#questionText').empty();
         $('#answerGrid').empty();
     },
@@ -205,7 +216,8 @@ const GameUI = {
     },
 
     startTimer: function() {
-        this.timeLeft = 30;  // Changed from 20 to 30
+        const timerDuration = this.getTimerDuration();
+        this.timeLeft = timerDuration;  // Use dynamic timer duration
         $('#timer').text(this.timeLeft);
         $('#timer, #timerProgress').removeClass('countdown-warning');
         
@@ -226,14 +238,17 @@ const GameUI = {
             $('#timer').text(this.timeLeft);
             
             // Update timer progress bar
-            const progressWidth = (this.timeLeft / 30) * 100;  // Changed from 20 to 30
+            const progressWidth = (this.timeLeft / timerDuration) * 100;  // Use dynamic timer duration
             $progressBar.css('width', `${progressWidth}%`);
             
-            // Update color based on time remaining
-            if (this.timeLeft <= 8) {  // Changed from 5 to 8 for better proportion
+            // Update color based on time remaining - scale with timer duration
+            const lowThreshold = Math.ceil(timerDuration * 0.27); // ~27% of total time (8s for 30s, 12s for 45s, 16s for 60s)
+            const mediumThreshold = Math.ceil(timerDuration * 0.5); // 50% of total time
+            
+            if (this.timeLeft <= lowThreshold) {
                 $progressBar.removeClass('timer-medium').addClass('timer-low');
                 // Only play sound if this is during an active question
-                if (this.timeLeft === 5 && this.isNewQuestion) {  // Changed from 5 to 8
+                if (this.timeLeft === 5 && this.isNewQuestion) {  // Keep 5-second countdown regardless of total time
                     this.playSound('5-second-countdown');
                     $('#timer, #timerProgress').addClass('countdown-warning');
                     
@@ -246,7 +261,7 @@ const GameUI = {
                         }
                     }, 200);
                 }
-            } else if (this.timeLeft <= 15) {  // Changed from 10 to 15
+            } else if (this.timeLeft <= mediumThreshold) {
                 $progressBar.removeClass('timer-high').addClass('timer-medium');
             }
             
@@ -324,7 +339,7 @@ const GameUI = {
             question_id: question.id,
             question_text: question.question,
             is_correct: isCorrect,
-            time_taken: 30 - this.timeLeft,  // Changed from 20 to 30
+            time_taken: this.getTimerDuration() - this.timeLeft,  // Use dynamic timer duration
             score: isCorrect ? (1000 + (this.timeLeft * 100)) : 0
         });
 
