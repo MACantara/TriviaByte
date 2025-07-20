@@ -144,8 +144,7 @@ function startRandomQuiz(difficulty = 'medium') {
                     levelContainer.style.display = 'none';
                 }
             } else {
-                console.error('Quiz failed to start via QuizLogic');
-                alert('No questions available for this difficulty level.');
+                console.log('Quiz failed to start via QuizLogic - error already handled by QuizLogic');
             }
         }).catch(error => {
             console.error('Error with QuizLogic.startQuizWithDifficulty:', error);

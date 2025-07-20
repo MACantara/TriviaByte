@@ -137,7 +137,7 @@ const QuizLogic = {
             
             // Handle different types of errors
             if (error.status === 404) {
-                // Parse the error response if it's JSON
+                // Parse the error response if it's JSON and show detailed message
                 try {
                     const errorData = error.responseJSON || JSON.parse(error.responseText);
                     let errorMessage = errorData.error || 'No questions found for this difficulty.';
@@ -160,10 +160,12 @@ const QuizLogic = {
                 } catch (parseError) {
                     alert('No questions available for this difficulty level. Please try a different level or ask an admin to add more questions.');
                 }
+                return false;
             } else {
+                // Only show generic error for non-404 errors
                 alert('Error loading questions. Please try again.');
+                return false;
             }
-            return false;
         }
     },
 
