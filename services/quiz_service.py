@@ -6,11 +6,22 @@ class QuizService:
     def __init__(self):
         self.ai_service = AIService()
 
-    def _create_prompt(self, topic, num_questions, question_types):
-        return f"""Generate {num_questions} general knowledge multiple choice questions that test a broad understanding of {topic}.
+    def _create_prompt(self, topic, num_questions, question_types, difficulty='medium'):
+        difficulty_descriptions = {
+            'easy': 'basic knowledge that most people would know, suitable for beginners',
+            'medium': 'moderate difficulty requiring some general knowledge',
+            'hard': 'challenging questions requiring deeper knowledge or expertise'
+        }
+        
+        difficulty_desc = difficulty_descriptions.get(difficulty, 'moderate difficulty')
+        
+        return f"""Generate {num_questions} {difficulty} difficulty general knowledge multiple choice questions that test a broad understanding of {topic}.
+        
+        Difficulty Level: {difficulty.upper()} - Questions should be {difficulty_desc}.
         
         Strictly follow these rules:
         - Questions should cover diverse aspects of {topic} that an educated person might know
+        - Adjust complexity based on difficulty: {difficulty_desc}
         - Include a mix of historical facts, current events, cultural significance, and practical applications
         - Make questions engaging and interesting, not just dry facts
         - Each question must have exactly 4 options
@@ -25,7 +36,8 @@ class QuizService:
                 "type": "multiple_choice",
                 "question": "question_text",
                 "options": ["option1", "option2", "option3", "option4"],
-                "correct_answer": "correct_option"
+                "correct_answer": "correct_option",
+                "difficulty": "{difficulty}"
             }}
         ]}}
         """
@@ -41,11 +53,11 @@ class QuizService:
             text = text[:-3]
         return text.strip()
     
-    def generate_quiz(self, topic, num_questions, question_types):
+    def generate_quiz(self, topic, num_questions, question_types, difficulty='medium'):
         try:
             # Remove max limit check, keep minimum of 1
             num_questions = max(int(num_questions), 1)
-            prompt = self._create_prompt(topic, num_questions, question_types)
+            prompt = self._create_prompt(topic, num_questions, question_types, difficulty)
             
             # Pass topic for context-aware generation
             response = self.ai_service.generate_content(prompt, topic=topic)
