@@ -106,13 +106,63 @@ const QuizLogic = {
             if (response.status === 'success' && response.questions.length > 0) {
                 GameUI.startGame(response.questions);
                 return true;
+            } else if (response.status === 'error') {
+                // Show detailed error message with available difficulties
+                let errorMessage = response.error || 'No questions available for this difficulty level.';
+                
+                if (response.available_difficulties) {
+                    const availableDiffs = [];
+                    for (const [diff, count] of Object.entries(response.available_difficulties)) {
+                        if (count > 0) {
+                            availableDiffs.push(`${diff} (${count} questions)`);
+                        }
+                    }
+                    
+                    if (availableDiffs.length > 0) {
+                        errorMessage += `\n\nAvailable difficulty levels:\n${availableDiffs.join('\n')}`;
+                        errorMessage += '\n\nPlease select a different difficulty level or ask an admin to add more questions.';
+                    } else {
+                        errorMessage += '\n\nNo questions available in any difficulty level. Please ask an admin to add questions to the database.';
+                    }
+                }
+                
+                alert(errorMessage);
+                return false;
             } else {
                 alert('No questions available for this difficulty level.');
                 return false;
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error loading questions. Please try again.');
+            
+            // Handle different types of errors
+            if (error.status === 404) {
+                // Parse the error response if it's JSON
+                try {
+                    const errorData = error.responseJSON || JSON.parse(error.responseText);
+                    let errorMessage = errorData.error || 'No questions found for this difficulty.';
+                    
+                    if (errorData.available_difficulties) {
+                        const availableDiffs = [];
+                        for (const [diff, count] of Object.entries(errorData.available_difficulties)) {
+                            if (count > 0) {
+                                availableDiffs.push(`${diff} (${count} questions)`);
+                            }
+                        }
+                        
+                        if (availableDiffs.length > 0) {
+                            errorMessage += `\n\nAvailable difficulty levels:\n${availableDiffs.join('\n')}`;
+                            errorMessage += '\n\nPlease select a different difficulty level.';
+                        }
+                    }
+                    
+                    alert(errorMessage);
+                } catch (parseError) {
+                    alert('No questions available for this difficulty level. Please try a different level or ask an admin to add more questions.');
+                }
+            } else {
+                alert('Error loading questions. Please try again.');
+            }
             return false;
         }
     },

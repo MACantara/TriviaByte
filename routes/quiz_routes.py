@@ -101,9 +101,33 @@ def get_random_questions():  # Removed @login_required decorator
         # Get 5 random questions from the database with specified difficulty
         random_questions = Question.query.filter_by(difficulty=difficulty).order_by(func.random()).limit(5).all()
         
-        # If no questions for the specified difficulty, fall back to any difficulty
+        # If no questions for the specified difficulty, return error instead of fallback
         if not random_questions:
-            random_questions = Question.query.order_by(func.random()).limit(5).all()
+            # Check if there are any questions in the database at all
+            total_questions = Question.query.count()
+            if total_questions == 0:
+                return jsonify({
+                    'error': f"No questions available in the database. Please add some questions first.",
+                    'status': 'error',
+                    'difficulty_requested': difficulty
+                }), 404
+            else:
+                # Get count of questions per difficulty for user information
+                easy_count = Question.query.filter_by(difficulty='easy').count()
+                medium_count = Question.query.filter_by(difficulty='medium').count()
+                hard_count = Question.query.filter_by(difficulty='hard').count()
+                
+                return jsonify({
+                    'error': f"No questions available for '{difficulty}' difficulty level.",
+                    'status': 'error',
+                    'difficulty_requested': difficulty,
+                    'available_difficulties': {
+                        'easy': easy_count,
+                        'medium': medium_count,
+                        'hard': hard_count
+                    },
+                    'suggestion': f"Try a different difficulty level with available questions."
+                }), 404
         
         questions = [{
             'id': q.id,
@@ -117,7 +141,9 @@ def get_random_questions():  # Removed @login_required decorator
 
         return jsonify({
             'questions': questions,
-            'status': 'success'
+            'status': 'success',
+            'difficulty': difficulty,
+            'count': len(questions)
         })
     except Exception as e:
         current_app.logger.error(f"Error fetching random questions: {str(e)}")
